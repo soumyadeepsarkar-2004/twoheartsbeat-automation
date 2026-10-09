@@ -1,0 +1,36 @@
+name: Daily 7:30 PM Instagram Publisher
+
+on:
+  schedule:
+    # 14:00 UTC is exactly 19:30 IST (7:30 PM Indian Standard Time) every day
+    - cron: '0 14 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish-to-instagram:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Publish Today's Post to Instagram
+        env:
+          META_ACCESS_TOKEN: ${{ secrets.META_ACCESS_TOKEN }}
+          INSTAGRAM_ACCOUNT_ID: ${{ secrets.INSTAGRAM_ACCOUNT_ID }}
+        run: |
+          python cloud_publisher.py
+
+      - name: Commit Updated Operating Log
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add log.md
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Auto-update operating log with published post" && git push)
