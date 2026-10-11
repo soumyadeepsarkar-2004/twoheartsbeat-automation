@@ -25,7 +25,7 @@
 | **`/ig-reply`** | `instagram_live_automator.py` | Triages comments into KEYWORD, LEAD, SUBSTANCE, QUESTION, SUPPORT | ✅ Active via Meta Graph API |
 | **`/ig-dm`** | `instagram_live_automator.py` | Auto-delivers twoheartsbeat.vercel.app room link on keyword `SYNC` | ✅ Active via Meta Graph API |
 | **`/ig-audit`** | `run_audit.py` | Pulls Meta Graph API insights, calculates hold@3s & outlier multiples | ✅ Active (`audit_report.md` created) |
-| **`/ig-viral`** | `swipe.md` | Swipe file tracking top-performing formulas and outlier multiples | ✅ Active & Crated |
+| **`/ig-viral`** | `swipe.md` | Swipe file tracking top-performing formulas and outlier multiples | ✅ Active & Created |
 | **`/ig-repurpose`**| Operating Protocol | Transforms user questions and comments into new Reel scenes | ✅ Active & Integrated |
 
 ---
@@ -35,15 +35,15 @@
 | Day | Format | Asset Path | Status | Live Post ID / Link |
 |---|---|---|---|---|
 | **Day 1** | REEL (Cinematic) | `reels_output/Day1_Master_Cinematic_Reel_IG.mp4` | 🎉 **PUBLISHED** | `18471692641139223` ([View Live Reel](https://www.instagram.com/reel/DeSIE0EgecH/)) |
-| **Day 2** | REEL (Cinematic) | `reels_output/Day2_Master_Cinematic_Reel_IG.mp4` | 📦 **RENDERED & READY** | Queued for daily schedule |
-| **Day 3** | REEL (Cinematic) | `reels_output/Day3_Master_Cinematic_Reel_IG.mp4` | 📦 **RENDERED & READY** | Queued for daily schedule |
-| **Day 4** | CAROUSEL | `carousel_output/Day4/slide_1.png` - `8.png` | 📦 **RENDERED & READY** | 8 high-res 1080x1350 PNG slides ready |
-| **Days 5-30**| REELS & CAROUSELS | `content_database.json` & `plan_30_days.md` | 🗓️ **SCHEDULED** | Ready for on-demand / scheduled rendering |
+| **Day 2** | REEL (Cinematic) | `reels_output/Day2_Master_Cinematic_Reel_IG.mp4` | 🎉 **PUBLISHED** | `18118273427324508` ([View Live Reel](https://www.instagram.com/reel/DeXObEZkdqd/)) |
+| **Day 3** | REEL (Cinematic) | `reels_output/Day3_Master_Cinematic_Reel_IG.mp4` | 🎉 **PUBLISHED** | `17878189179632139` ([View Live Reel](https://www.instagram.com/reel/DeXOkVwiaNn/)) |
+| **Day 4** | CAROUSEL | `carousel_output/Day4/slide_1.png` - `8.png` | 📦 **RENDERED & QUEUED** | Queued for next 7:30 PM slot |
+| **Days 5-30**| REELS & CAROUSELS | `content_database.json` & `plan_30_days.md` | 🗓️ **SCHEDULED** | Ready in cloud repository |
 
 ---
 
-## Live Automator Daemons
-- **Threaded Media Server:** Serving port 8080 (`task-493`).
-- **Localtunnel:** Exposing port 8080 to Meta ingest crawlers (`task-495`).
+## Live Automator Daemons & Cloud Engines
+- **Cloud Runner:** GitHub Actions (`daily-730pm-post.yml`) active in [soumyadeepsarkar-2004/twoheartsbeat-automation](https://github.com/soumyadeepsarkar-2004/twoheartsbeat-automation).
+- **Auto-Retries & Fallbacks:** Multi-tier retry engine with exponential backoff and `published_state.json` sync.
 - **Live Comment & DM Responder:** `instagram_live_automator.py` polling for keyword `SYNC`.
-- **Daily Master Runner:** `run_daily_automation.bat` / `daily_automation_scheduler.py`.
+- **Local Fallback:** Windows Task Scheduler `\TwoHeartsBeatDailyAutomation` triggering daily at 19:30:00 IST.
