@@ -38,7 +38,8 @@
 | **Day 2** | REEL (Cinematic) | `reels_output/Day2_Master_Cinematic_Reel_IG.mp4` | 🎉 **PUBLISHED** | `18118273427324508` ([View Live Reel](https://www.instagram.com/reel/DeXObEZkdqd/)) |
 | **Day 3** | REEL (Cinematic) | `reels_output/Day3_Master_Cinematic_Reel_IG.mp4` | 🎉 **PUBLISHED** | `17878189179632139` ([View Live Reel](https://www.instagram.com/reel/DeXOkVwiaNn/)) |
 | **Day 4** | CAROUSEL (8 Slides) | `carousels/Day4/slide_1.jpg` - `8.jpg` | 🎉 **PUBLISHED** | `17992575363047675` ([View Live Post](https://www.instagram.com/p/DeXRpB3n5PA/)) |
-| **Days 5-30**| REELS & CAROUSELS | `content_database.json` & `plan_30_days.md` | 🗓️ **SCHEDULED** | Ready in cloud repository |
+| **Day 5** | REEL (Cinematic) | `reels/Day5_Master_Cinematic_Reel_IG.mp4` | 🎉 **PUBLISHED** | `18126352054881451` ([View Live Reel](https://www.instagram.com/reel/DeXUye-Ew9m/)) |
+| **Days 6-30**| REELS & CAROUSELS | `content_database.json` & `plan_30_days.md` | 🗓️ **SCHEDULED** | Ready in cloud repository |
 
 ---
 

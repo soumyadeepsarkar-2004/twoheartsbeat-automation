@@ -59,4 +59,11 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add log.md published_state.json
-          git diff --quiet && git diff --staged --quiet || (git pull --rebase origin main && git commit -m "Auto-update operating log and state [skip ci]" && git push origin main)
+          if ! git diff --cached --quiet; then
+            echo "Changes detected in log.md or published_state.json. Committing..."
+            git commit -m "Auto-update operating log and state [skip ci]"
+            git pull --rebase origin main || true
+            git push origin main || (git pull --rebase -Xours origin main && git push origin main)
+          else
+            echo "Working tree is clean. Nothing to commit."
+          fi
