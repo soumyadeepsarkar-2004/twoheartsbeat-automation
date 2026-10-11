@@ -84,15 +84,16 @@ def save_published_state(day_num, post_id, permalink, title):
     with open(STATE_FILE, "w", encoding="utf-8") as sf:
         json.dump(state, sf, indent=2)
 
-def is_already_published_today(state):
+def is_already_published_recently(state, min_hours=12):
+    """Checks if a post was already published recently (within 12 hours) to prevent duplicate runs on catch-up crons."""
     last_pub_at = state.get("last_published_at")
     if not last_pub_at:
         return False
     try:
         last_dt = datetime.fromisoformat(last_pub_at)
         now_dt = datetime.now(IST)
-        # Compare calendar dates in IST
-        return last_dt.astimezone(IST).date() == now_dt.date()
+        diff_hours = (now_dt - last_dt.astimezone(IST)).total_seconds() / 3600.0
+        return diff_hours < min_hours
     except Exception:
         return False
 
@@ -356,10 +357,10 @@ def main():
     force_run = args.force or force_env
 
     if not force_run and args.day is None:
-        if is_already_published_today(state):
+        if is_already_published_recently(state, min_hours=12):
             last_day = state.get("last_published")
             last_at = state.get("last_published_at", "")
-            print(f"✨ Day {last_day} was already published today (last at {last_at}).", flush=True)
+            print(f"✨ Day {last_day} was already published recently (last at {last_at}).", flush=True)
             print("Autopilot is active and in sync. Exiting safely to prevent duplicate posting.", flush=True)
             sys.exit(0)
 
