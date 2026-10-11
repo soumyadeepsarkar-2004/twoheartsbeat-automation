@@ -2,9 +2,22 @@ name: Daily 7:30 PM Instagram Publisher
 
 on:
   schedule:
-    # 14:00 UTC is exactly 19:30 IST (7:30 PM Indian Standard Time) every day
+    # 14:00 UTC is exactly 19:30 IST (7:30 PM IST) primary cron
     - cron: '0 14 * * *'
+    # 14:15 UTC is 19:45 IST fallback in case GitHub scheduler is delayed
+    - cron: '15 14 * * *'
+    # 14:30 UTC is 20:00 IST secondary fallback
+    - cron: '30 14 * * *'
   workflow_dispatch:
+    inputs:
+      target_day:
+        description: 'Target Day to publish (leave blank for automatic next day)'
+        required: false
+        default: ''
+      force:
+        description: 'Force publish even if already published today (true/false)'
+        required: false
+        default: 'false'
 
 permissions:
   contents: write
@@ -15,6 +28,8 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -25,12 +40,23 @@ jobs:
         env:
           META_ACCESS_TOKEN: ${{ secrets.META_ACCESS_TOKEN }}
           INSTAGRAM_ACCOUNT_ID: ${{ secrets.INSTAGRAM_ACCOUNT_ID }}
+          TARGET_DAY_INPUT: ${{ github.event.inputs.target_day }}
+          FORCE_INPUT: ${{ github.event.inputs.force }}
         run: |
-          python cloud_publisher.py
+          CMD="python cloud_publisher.py"
+          if [ -n "$TARGET_DAY_INPUT" ]; then
+            CMD="$CMD --day $TARGET_DAY_INPUT"
+          fi
+          if [ "$FORCE_INPUT" = "true" ]; then
+            CMD="$CMD --force"
+          fi
+          echo "Executing: $CMD"
+          $CMD
 
-      - name: Commit Updated Operating Log
+      - name: Commit Updated Operating Log and State
+        if: always()
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add log.md
-          git diff --quiet && git diff --staged --quiet || (git commit -m "Auto-update operating log with published post" && git push)
+          git add log.md published_state.json
+          git diff --quiet && git diff --staged --quiet || (git pull --rebase origin main && git commit -m "Auto-update operating log and state [skip ci]" && git push origin main)

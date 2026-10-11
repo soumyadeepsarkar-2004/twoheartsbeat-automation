@@ -37,7 +37,7 @@
 | **Day 1** | REEL (Cinematic) | `reels_output/Day1_Master_Cinematic_Reel_IG.mp4` | 🎉 **PUBLISHED** | `18471692641139223` ([View Live Reel](https://www.instagram.com/reel/DeSIE0EgecH/)) |
 | **Day 2** | REEL (Cinematic) | `reels_output/Day2_Master_Cinematic_Reel_IG.mp4` | 🎉 **PUBLISHED** | `18118273427324508` ([View Live Reel](https://www.instagram.com/reel/DeXObEZkdqd/)) |
 | **Day 3** | REEL (Cinematic) | `reels_output/Day3_Master_Cinematic_Reel_IG.mp4` | 🎉 **PUBLISHED** | `17878189179632139` ([View Live Reel](https://www.instagram.com/reel/DeXOkVwiaNn/)) |
-| **Day 4** | CAROUSEL | `carousel_output/Day4/slide_1.png` - `8.png` | 📦 **RENDERED & QUEUED** | Queued for next 7:30 PM slot |
+| **Day 4** | CAROUSEL (8 Slides) | `carousels/Day4/slide_1.jpg` - `8.jpg` | 🎉 **PUBLISHED** | `17992575363047675` ([View Live Post](https://www.instagram.com/p/DeXRpB3n5PA/)) |
 | **Days 5-30**| REELS & CAROUSELS | `content_database.json` & `plan_30_days.md` | 🗓️ **SCHEDULED** | Ready in cloud repository |
 
 ---
@@ -47,3 +47,4 @@
 - **Auto-Retries & Fallbacks:** Multi-tier retry engine with exponential backoff and `published_state.json` sync.
 - **Live Comment & DM Responder:** `instagram_live_automator.py` polling for keyword `SYNC`.
 - **Local Fallback:** Windows Task Scheduler `\TwoHeartsBeatDailyAutomation` triggering daily at 19:30:00 IST.
+| **Day 4 (CAROUSEL)** | `17992575363047675` | 5 Songs That Hit Different Synced | 🎉 **LIVE ON FEED** | [View Post](https://www.instagram.com/p/DeXRpB3n5PA/) |
