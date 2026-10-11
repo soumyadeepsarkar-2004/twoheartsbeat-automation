@@ -34,7 +34,7 @@ def get_next_day():
             print(f"Warning reading state file: {e}", flush=True)
     return 1
 
-def save_published_state(day_num, post_id, permalink, track_title):
+def save_published_state(day_num, post_id, permalink, title):
     state = {"published_days": [], "last_published": day_num, "history": []}
     if os.path.exists(STATE_FILE):
         try:
@@ -50,7 +50,7 @@ def save_published_state(day_num, post_id, permalink, track_title):
         "day": day_num,
         "post_id": post_id,
         "permalink": permalink,
-        "track": track_title
+        "title": title
     })
     with open(STATE_FILE, "w", encoding="utf-8") as sf:
         json.dump(state, sf, indent=2)
@@ -98,6 +98,8 @@ def publish_with_retry(target_day, max_retries=3):
 
     day_data = db["days"][day_str]
     fmt = day_data.get("format", "REEL")
+    caption = day_data.get("caption")
+
     print("==================================================", flush=True)
     print(f"🚀 GITHUB CLOUD PUBLISHER: DAY {target_day} ({fmt})", flush=True)
     print(f"Timestamp: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} IST", flush=True)
@@ -105,70 +107,103 @@ def publish_with_retry(target_day, max_retries=3):
     print(f"Topic: {day_data.get('badge')}", flush=True)
     print("==================================================", flush=True)
 
-    video_filename = f"Day{target_day}_Master_Cinematic_Reel_IG.mp4"
-    raw_video_url = f"https://raw.githubusercontent.com/soumyadeepsarkar-2004/twoheartsbeat-automation/main/reels/{video_filename}"
-    caption = day_data.get("caption")
+    headers = {'User-Agent': 'Mozilla/5.0'}
+    container_url = f"https://graph.instagram.com/v19.0/{account_id}/media"
 
     for attempt_retry in range(1, max_retries + 1):
-        print(f"\n[Attempt {attempt_retry}/{max_retries}] Submitting media container to Meta Graph API...", flush=True)
-        print(f"Video Source: {raw_video_url}", flush=True)
-
-        container_url = f"https://graph.instagram.com/v19.0/{account_id}/media"
-        container_params = {
-            "media_type": "REELS",
-            "video_url": raw_video_url,
-            "caption": caption,
-            "access_token": token
-        }
-        headers = {'User-Agent': 'Mozilla/5.0'}
-        data = urllib.parse.urlencode(container_params).encode('utf-8')
-        req = urllib.request.Request(container_url, data=data, headers=headers)
+        print(f"\n[Attempt {attempt_retry}/{max_retries}] Preparing media container for Meta Graph API...", flush=True)
 
         try:
-            with urllib.request.urlopen(req) as resp:
-                res = json.loads(resp.read().decode('utf-8'))
-                container_id = res.get("id")
-                print(f"✅ MEDIA CONTAINER CREATED: {container_id}", flush=True)
+            if fmt == "REEL":
+                video_filename = f"Day{target_day}_Master_Cinematic_Reel_IG.mp4"
+                raw_video_url = f"https://raw.githubusercontent.com/soumyadeepsarkar-2004/twoheartsbeat-automation/main/reels/{video_filename}"
+                print(f"Video Source: {raw_video_url}", flush=True)
 
-            status_url = f"https://graph.instagram.com/v19.0/{container_id}?fields=status_code,status&access_token={token}"
-            print("Polling Meta video processing servers...", flush=True)
+                container_params = {
+                    "media_type": "REELS",
+                    "video_url": raw_video_url,
+                    "caption": caption,
+                    "access_token": token
+                }
+                data = urllib.parse.urlencode(container_params).encode('utf-8')
+                req = urllib.request.Request(container_url, data=data, headers=headers)
+                with urllib.request.urlopen(req) as resp:
+                    res = json.loads(resp.read().decode('utf-8'))
+                    container_id = res.get("id")
+                    print(f"✅ MEDIA CONTAINER CREATED: {container_id}", flush=True)
 
-            ingestion_finished = False
-            for poll in range(25):
-                time.sleep(5)
-                s_req = urllib.request.Request(status_url)
-                with urllib.request.urlopen(s_req) as s_resp:
-                    s_res = json.loads(s_resp.read().decode('utf-8'))
-                    status = s_res.get("status_code")
-                    print(f"  Poll {poll+1}: Status = {status}", flush=True)
-                    if status == "FINISHED":
-                        ingestion_finished = True
-                        break
-                    elif status == "ERROR":
-                        print(f"  ❌ Meta processing error on container: {s_res}", flush=True)
-                        break
+                # Poll status
+                status_url = f"https://graph.instagram.com/v19.0/{container_id}?fields=status_code,status&access_token={token}"
+                print("Polling Meta video processing servers...", flush=True)
 
-            if not ingestion_finished:
-                print(f"⚠️ Retrying in 10s... (Attempt {attempt_retry} failed)", flush=True)
-                time.sleep(10)
-                continue
+                ingestion_finished = False
+                for poll in range(25):
+                    time.sleep(5)
+                    s_req = urllib.request.Request(status_url)
+                    with urllib.request.urlopen(s_req) as s_resp:
+                        s_res = json.loads(s_resp.read().decode('utf-8'))
+                        status = s_res.get("status_code")
+                        print(f"  Poll {poll+1}: Status = {status}", flush=True)
+                        if status == "FINISHED":
+                            ingestion_finished = True
+                            break
+                        elif status == "ERROR":
+                            print(f"  ❌ Meta processing error on container: {s_res}", flush=True)
+                            break
 
+                if not ingestion_finished:
+                    print(f"⚠️ Retrying in 10s... (Attempt {attempt_retry} failed)", flush=True)
+                    time.sleep(10)
+                    continue
+
+            elif fmt == "CAROUSEL":
+                slides_count = day_data.get("slides_count", 8)
+                print(f"Creating Carousel with {slides_count} slides...", flush=True)
+                slide_ids = []
+                for s_idx in range(1, slides_count + 1):
+                    slide_url = f"https://raw.githubusercontent.com/soumyadeepsarkar-2004/twoheartsbeat-automation/main/carousels/Day{target_day}/slide_{s_idx}.png"
+                    c_params = {
+                        "image_url": slide_url,
+                        "is_carousel_item": "true",
+                        "access_token": token
+                    }
+                    c_data = urllib.parse.urlencode(c_params).encode('utf-8')
+                    c_req = urllib.request.Request(container_url, data=c_data, headers=headers)
+                    with urllib.request.urlopen(c_req) as c_resp:
+                        c_res = json.loads(c_resp.read().decode('utf-8'))
+                        slide_ids.append(c_res.get("id"))
+                        print(f"  ✓ Slide {s_idx}/{slides_count} container: {c_res.get('id')}", flush=True)
+                    time.sleep(1)
+
+                parent_params = {
+                    "media_type": "CAROUSEL",
+                    "children": ",".join(slide_ids),
+                    "caption": caption,
+                    "access_token": token
+                }
+                p_data = urllib.parse.urlencode(parent_params).encode('utf-8')
+                p_req = urllib.request.Request(container_url, data=p_data, headers=headers)
+                with urllib.request.urlopen(p_req) as p_resp:
+                    p_res = json.loads(p_resp.read().decode('utf-8'))
+                    container_id = p_res.get("id")
+                    print(f"✅ CAROUSEL PARENT CONTAINER CREATED: {container_id}", flush=True)
+
+            # Publish Container
             print("Publishing container to live feed...", flush=True)
             pub_url = f"https://graph.instagram.com/v19.0/{account_id}/media_publish"
             pub_params = {
                 "creation_id": container_id,
                 "access_token": token
             }
-            p_data = urllib.parse.urlencode(pub_params).encode('utf-8')
-            p_req = urllib.request.Request(pub_url, data=p_data)
-            with urllib.request.urlopen(p_req) as p_resp:
-                p_res = json.loads(p_resp.read().decode('utf-8'))
-                post_id = p_res.get("id")
+            pub_data = urllib.parse.urlencode(pub_params).encode('utf-8')
+            pub_req = urllib.request.Request(pub_url, data=pub_data)
+            with urllib.request.urlopen(pub_req) as pub_resp:
+                pub_res = json.loads(pub_resp.read().decode('utf-8'))
+                post_id = pub_res.get("id")
                 print("\n==================================================", flush=True)
-                print(f"🎉 SUCCESS: DAY {target_day} REEL IS LIVE ON INSTAGRAM!", flush=True)
+                print(f"🎉 SUCCESS: DAY {target_day} IS LIVE ON INSTAGRAM!", flush=True)
                 print(f"Live Post ID: {post_id}", flush=True)
                 
-                # Retrieve permalink
                 time.sleep(3)
                 permalink = f"https://www.instagram.com/{handle}/"
                 try:
@@ -180,10 +215,10 @@ def publish_with_retry(target_day, max_retries=3):
                 print(f"Live URL: {permalink}", flush=True)
                 print("==================================================\n", flush=True)
 
-                # Persist State
-                save_published_state(target_day, post_id, permalink, day_data.get('track_title', ''))
+                title = day_data.get('track_title') or day_data.get('headline') or 'Featured Post'
+                save_published_state(target_day, post_id, permalink, title)
                 with open(LOG_FILE, "a", encoding="utf-8") as f:
-                    f.write(f"\n| **Day {target_day} (Cloud)** | `{post_id}` | 1080x1920 9:16 Vertical, {day_data.get('track_title')}, Motion Graphics + Lofi Beat | 🎉 **LIVE ON FEED** | [View Reel]({permalink}) |")
+                    f.write(f"\n| **Day {target_day} ({fmt})** | `{post_id}` | {title} | 🎉 **LIVE ON FEED** | [View Post]({permalink}) |")
                 
                 run_comment_sweep()
                 return True
