@@ -51,3 +51,4 @@
 - **Local Fallback:** Windows Task Scheduler `\TwoHeartsBeatDailyAutomation` triggering daily at 19:30:00 IST.
 
 | **Day 7 (REEL)** | `18110480381228818` | Tum Se Hi | 🎉 **LIVE ON FEED** | [View Post](https://www.instagram.com/reel/DecoWdnAtDc/) |
+| **Day 8 (REEL)** | `17977715631148517` | Iktara | 🎉 **LIVE ON FEED** | [View Post](https://www.instagram.com/reel/DefBHJhgLma/) |
