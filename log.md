@@ -53,3 +53,4 @@
 | **Day 7 (REEL)** | `18110480381228818` | Tum Se Hi | 🎉 **LIVE ON FEED** | [View Post](https://www.instagram.com/reel/DecoWdnAtDc/) |
 | **Day 8 (REEL)** | `17977715631148517` | Iktara | 🎉 **LIVE ON FEED** | [View Post](https://www.instagram.com/reel/DefBHJhgLma/) |
 | **Day 9 (REEL)** | `18411032008090330` | Pehla Nasha | 🎉 **LIVE ON FEED** | [View Post](https://www.instagram.com/reel/Dehj43qn8Kz/) |
+| **Day 10 (REEL)** | `17998109147822307` | Kho Gaye Hum Kahan | 🎉 **LIVE ON FEED** | [View Post](https://www.instagram.com/reel/DekHMJIkdST/) |

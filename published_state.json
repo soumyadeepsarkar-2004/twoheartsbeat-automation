@@ -8,10 +8,11 @@
     6,
     7,
     8,
-    9
+    9,
+    10
   ],
-  "last_published": 9,
-  "last_published_at": "2026-10-15T23:35:42.821411+05:30",
+  "last_published": 10,
+  "last_published_at": "2026-10-16T23:22:35.875019+05:30",
   "history": [
     {
       "day": 1,
@@ -72,6 +73,13 @@
       "permalink": "https://www.instagram.com/reel/Dehj43qn8Kz/",
       "title": "Pehla Nasha",
       "published_at": "2026-10-15T23:35:42.821411+05:30"
+    },
+    {
+      "day": 10,
+      "post_id": "17998109147822307",
+      "permalink": "https://www.instagram.com/reel/DekHMJIkdST/",
+      "title": "Kho Gaye Hum Kahan",
+      "published_at": "2026-10-16T23:22:35.875019+05:30"
     }
   ]
 }
