@@ -10,10 +10,11 @@
     8,
     9,
     10,
-    11
+    11,
+    12
   ],
-  "last_published": 11,
-  "last_published_at": "2026-10-21T14:01:00+00:00",
+  "last_published": 12,
+  "last_published_at": "2026-10-22T00:56:27.219794+05:30",
   "history": [
     {
       "day": 1,
@@ -86,6 +87,13 @@
       "permalink": "https://www.instagram.com/p/DepL1BYmqTu/",
       "title": "4 Rules of LDR That Actually Work",
       "published_at": "2026-10-21T14:01:00+00:00"
+    },
+    {
+      "day": 12,
+      "post_id": "17910084252602470",
+      "permalink": "https://www.instagram.com/reel/DexJ6aNn09m/",
+      "title": "Faasle",
+      "published_at": "2026-10-22T00:56:27.219794+05:30"
     }
   ]
 }

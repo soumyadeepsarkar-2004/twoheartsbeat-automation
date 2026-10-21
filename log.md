@@ -54,3 +54,5 @@
 - **Auto-Retries & Fallbacks:** Multi-tier retry engine with exponential backoff and `published_state.json` sync.
 - **Live Comment & DM Responder:** `instagram_live_automator.py` polling for keyword `SYNC`.
 - **Local Fallback:** Windows Task Scheduler `\TwoHeartsBeatDailyAutomation` triggering daily at 19:30:00 IST.
+
+| **Day 12 (REEL)** | `17910084252602470` | Faasle | 🎉 **LIVE ON FEED** | [View Post](https://www.instagram.com/reel/DexJ6aNn09m/) |
