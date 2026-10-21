@@ -16,10 +16,10 @@
 |---|---|---|---|
 | **`/ig-plan`** | `plan_30_days.md` | Master 30-Day calendar, daily hooks, stories & engagement targets | ✅ Active & Documented |
 | **`/ig-profile`** | `profile_optimization.md` | 12-item rubric audit, name field indexing, bio copy & pinned 3 | ✅ Audited (88/100 projected) |
-| **`/ig-reel`** | `generate_reel_day.py` | 1080x1920 Playwright motion graphics + TTS voice + ducked lofi music | ✅ Active (Days 1, 2, 3 Rendered) |
+| **`/ig-reel`** | `generate_reel_day.py` | 1080x1920 Playwright motion graphics + Neural Voice + 5 BGMs | ✅ Upgraded (4 Visual Templates, Studio Neural Voices) |
 | **`/ig-caption`** | `validate_caption.py` | Lints visible fold (<125 chars), search terms, and <=5 hashtag cap | ✅ Active (`caption.py` integrated) |
 | **`/ig-human`** | `validate_caption.py` | Detects AI markers, strips slop words via `slop.json` | ✅ Active (`detect.py` integrated) |
-| **`/ig-carousel`** | `generate_carousel_day.py` | Renders 1080x1350 4:5 slide decks with high dwell time | ✅ Active (Day 4 deck generated) |
+| **`/ig-carousel`** | `generate_carousel_day.py` | Renders 1080x1350 4:5 slide decks with high dwell time | ✅ Active (Carousel parent polling active) |
 | **`/ig-story`** | Embedded in `plan_30_days.md` | Daily 4-5 frame sequences with interactive polls, quizzes, sliders | ✅ Active (30 days mapped) |
 | **`/ig-comment`** | Embedded in `plan_30_days.md` | Daily 20-min 10-account engagement rounds (reach/peers/buyers) | ✅ Active (Target lists ready) |
 | **`/ig-reply`** | `instagram_live_automator.py` | Triages comments into KEYWORD, LEAD, SUBSTANCE, QUESTION, SUPPORT | ✅ Active via Meta Graph API |
@@ -40,7 +40,12 @@
 | **Day 4** | CAROUSEL (8 Slides) | `carousels/Day4/slide_1.jpg` - `8.jpg` | 🎉 **PUBLISHED** | `17992575363047675` ([View Live Post](https://www.instagram.com/p/DeXRpB3n5PA/)) |
 | **Day 5** | REEL (Cinematic) | `reels/Day5_Master_Cinematic_Reel_IG.mp4` | 🎉 **PUBLISHED** | `18126352054881451` ([View Live Reel](https://www.instagram.com/reel/DeXUye-Ew9m/)) |
 | **Day 6** | REEL (Cinematic) | `reels/Day6_Master_Cinematic_Reel_IG.mp4` | 🎉 **PUBLISHED** | `17982633632904320` ([View Live Reel](https://www.instagram.com/reel/DeZ2rcCjwff/)) |
-| **Days 7-30**| REELS & CAROUSELS | `content_database.json` & `plan_30_days.md` | 🗓️ **SCHEDULED** | Ready in cloud repository |
+| **Day 7** | REEL (Cinematic) | `reels/Day7_Master_Cinematic_Reel_IG.mp4` | 🎉 **PUBLISHED** | `18110480381228818` ([View Live Reel](https://www.instagram.com/reel/DecoWdnAtDc/)) |
+| **Day 8** | REEL (Cinematic) | `reels/Day8_Master_Cinematic_Reel_IG.mp4` | 🎉 **PUBLISHED** | `17977715631148517` ([View Live Reel](https://www.instagram.com/reel/DefBHJhgLma/)) |
+| **Day 9** | REEL (Cinematic) | `reels/Day9_Master_Cinematic_Reel_IG.mp4` | 🎉 **PUBLISHED** | `18411032008090330` ([View Live Reel](https://www.instagram.com/reel/Dehj43qn8Kz/)) |
+| **Day 10** | REEL (Cinematic) | `reels/Day10_Master_Cinematic_Reel_IG.mp4` | 🎉 **PUBLISHED** | `17998109147822307` ([View Live Reel](https://www.instagram.com/reel/DekHMJIkdST/)) |
+| **Day 11** | CAROUSEL (7 Slides) | `carousels/Day11/slide_1.jpg` - `7.jpg` | 🎉 **PUBLISHED** | `18131634085705141` ([View Live Post](https://www.instagram.com/p/DepL1BYmqTu/)) |
+| **Days 12-16** | REELS (Multi-Template) | `reels/Day12-16_Master_Cinematic_Reel_IG.mp4` | 🚀 **STAGED IN CLOUD** | Ready for automated release |
 
 ---
 
@@ -49,8 +54,3 @@
 - **Auto-Retries & Fallbacks:** Multi-tier retry engine with exponential backoff and `published_state.json` sync.
 - **Live Comment & DM Responder:** `instagram_live_automator.py` polling for keyword `SYNC`.
 - **Local Fallback:** Windows Task Scheduler `\TwoHeartsBeatDailyAutomation` triggering daily at 19:30:00 IST.
-
-| **Day 7 (REEL)** | `18110480381228818` | Tum Se Hi | 🎉 **LIVE ON FEED** | [View Post](https://www.instagram.com/reel/DecoWdnAtDc/) |
-| **Day 8 (REEL)** | `17977715631148517` | Iktara | 🎉 **LIVE ON FEED** | [View Post](https://www.instagram.com/reel/DefBHJhgLma/) |
-| **Day 9 (REEL)** | `18411032008090330` | Pehla Nasha | 🎉 **LIVE ON FEED** | [View Post](https://www.instagram.com/reel/Dehj43qn8Kz/) |
-| **Day 10 (REEL)** | `17998109147822307` | Kho Gaye Hum Kahan | 🎉 **LIVE ON FEED** | [View Post](https://www.instagram.com/reel/DekHMJIkdST/) |

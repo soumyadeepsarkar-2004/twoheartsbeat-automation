@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Two Hearts Beat - Tech Teardown</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600;0,9..40,700;1,9..40,400&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    width: 1080px;
+    height: 1920px;
+    background: #0A0D18;
+    color: #FFFFFF;
+    font-family: 'DM Sans', sans-serif;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* Matrix / Cyber Grid */
+  .grid-pattern {
+    position: absolute;
+    inset: 0;
+    background-image: linear-gradient(rgba(0, 240, 255, 0.04) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(0, 240, 255, 0.04) 1px, transparent 1px);
+    background-size: 50px 50px;
+  }
+  .glow-cyan {
+    position: absolute;
+    top: 25%;
+    left: -10%;
+    width: 700px;
+    height: 700px;
+    background: radial-gradient(circle, rgba(0, 240, 255, 0.12), transparent 70%);
+    filter: blur(100px);
+    border-radius: 50%;
+  }
+
+  /* Top Bar */
+  .top-bar {
+    position: absolute;
+    top: 70px;
+    left: 60px;
+    right: 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 20;
+  }
+  .tech-pill {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(0, 240, 255, 0.08);
+    border: 1px solid rgba(0, 240, 255, 0.25);
+    padding: 12px 24px;
+    border-radius: 999px;
+    font-family: 'DM Mono', monospace;
+    font-size: 19px;
+    color: #38BDF8;
+  }
+  .pulse-cyan {
+    width: 12px;
+    height: 12px;
+    background: #38BDF8;
+    border-radius: 50%;
+    box-shadow: 0 0 12px #38BDF8;
+  }
+  .brand-logo {
+    font-family: 'DM Mono', monospace;
+    font-size: 22px;
+    color: #FF7A59;
+    letter-spacing: 2px;
+    font-weight: 700;
+  }
+
+  /* Main Teardown Stage */
+  .stage {
+    position: absolute;
+    inset: 0;
+    padding: 170px 60px 120px 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    z-index: 10;
+  }
+
+  /* Header */
+  .header-card {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .tech-badge {
+    display: inline-block;
+    padding: 10px 24px;
+    background: rgba(56, 189, 248, 0.12);
+    border: 1px solid rgba(56, 189, 248, 0.4);
+    border-radius: 999px;
+    font-family: 'DM Mono', monospace;
+    font-size: 20px;
+    color: #38BDF8;
+    letter-spacing: 1px;
+    margin-bottom: 16px;
+  }
+  .headline {
+    font-size: 52px;
+    font-weight: 700;
+    line-height: 1.15;
+  }
+  .headline em {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    color: #FF7A59;
+  }
+
+  /* Architecture Benchmark Card */
+  .teardown-box {
+    background: rgba(17, 24, 39, 0.85);
+    border: 1px solid rgba(56, 189, 248, 0.25);
+    border-radius: 32px;
+    padding: 36px 36px;
+    backdrop-filter: blur(25px);
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+  }
+  .metric-row {
+    margin-bottom: 24px;
+  }
+  .metric-header {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'DM Mono', monospace;
+    font-size: 21px;
+    margin-bottom: 10px;
+  }
+  .bar-wrapper {
+    width: 100%;
+    height: 24px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 999px;
+    overflow: hidden;
+    position: relative;
+  }
+  .bar-fill-discord {
+    width: 68%;
+    height: 100%;
+    background: linear-gradient(90deg, #F87171, #EF4444);
+    border-radius: 999px;
+  }
+  .bar-fill-spotify {
+    width: 92%;
+    height: 100%;
+    background: linear-gradient(90deg, #F87171, #DC2626);
+    border-radius: 999px;
+  }
+  .bar-fill-2hb {
+    width: 8%;
+    height: 100%;
+    background: linear-gradient(90deg, #34D399, #10B981);
+    box-shadow: 0 0 15px #10B981;
+    border-radius: 999px;
+  }
+
+  /* Node Sync Packet Visualization */
+  .packet-sync-card {
+    background: rgba(13, 18, 30, 0.95);
+    border: 1px dashed rgba(56, 189, 248, 0.4);
+    border-radius: 20px;
+    padding: 22px 26px;
+    margin-top: 15px;
+    font-family: 'DM Mono', monospace;
+    font-size: 19px;
+  }
+  .packet-line {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  .highlight-green {
+    color: #34D399;
+    font-weight: 700;
+  }
+
+  /* Footer Payoff / CTA */
+  .footer-cta {
+    background: rgba(23, 26, 56, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 24px;
+    padding: 24px 30px;
+    text-align: center;
+  }
+  .footer-cta p {
+    font-size: 26px;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  .footer-cta strong {
+    color: #C8FF4F;
+    font-family: 'DM Mono', monospace;
+  }
+  .footer-sub {
+    font-size: 18px;
+    color: rgba(255, 255, 255, 0.6);
+    font-family: 'DM Mono', monospace;
+  }
+
+  /* Bottom Branding */
+  .bottom-branding {
+    position: absolute;
+    bottom: 30px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 19px;
+    color: rgba(255, 255, 255, 0.5);
+    z-index: 20;
+  }
+  .bottom-branding span { color: #FF7A59; }
+</style>
+</head>
+<body>
+  <div class="grid-pattern"></div>
+  <div class="glow-cyan"></div>
+
+  <!-- Top Bar -->
+  <header class="top-bar">
+    <div class="tech-pill">
+      <div class="pulse-cyan"></div>
+      <span>SYS_BENCHMARK // V2.4</span>
+    </div>
+    <div class="brand-logo">TWO HEARTS BEAT</div>
+  </header>
+
+  <main class="stage">
+    <div class="header-card">
+      <div class="tech-badge">SYS_BENCHMARK // 0MS</div>
+      <h1 class="headline">Why Spotify Jam desyncs<br><em>after 30 seconds</em>.</h1>
+    </div>
+
+    <!-- Teardown / Benchmarks -->
+    <div class="teardown-box">
+      <!-- Row 1: Spotify Jam -->
+      <div class="metric-row">
+        <div class="metric-header">
+          <span>Spotify Jam (Buffer Drift)</span>
+          <span style="color: #EF4444;">1,850 ms</span>
+        </div>
+        <div class="bar-wrapper">
+          <div class="bar-fill-spotify"></div>
+        </div>
+      </div>
+
+      <!-- Row 2: Discord Audio -->
+      <div class="metric-row">
+        <div class="metric-header">
+          <span>Discord Voice Stream</span>
+          <span style="color: #F87171;">620 ms</span>
+        </div>
+        <div class="bar-wrapper">
+          <div class="bar-fill-discord"></div>
+        </div>
+      </div>
+
+      <!-- Row 3: Two Hearts Beat -->
+      <div class="metric-row" style="margin-bottom: 0;">
+        <div class="metric-header">
+          <span>Two Hearts Beat (WebSocket NTP)</span>
+          <span style="color: #34D399; font-weight: 700;">14 ms [LOCKED]</span>
+        </div>
+        <div class="bar-wrapper">
+          <div class="bar-fill-2hb"></div>
+        </div>
+      </div>
+
+      <!-- Packet telemetry -->
+      <div class="packet-sync-card">
+        <div class="packet-line">
+          <span>ROUTE: Host Client 📍 ➔ Guest Client 📍</span>
+          <span class="highlight-green">STATUS: 200 OK</span>
+        </div>
+        <div class="packet-line">
+          <span>NTP JITTER: ±1.2 ms</span>
+          <span class="highlight-green">FRAME SYNC: 100%</span>
+        </div>
+        <div class="packet-line" style="margin-bottom: 0;">
+          <span>AUDIO ENGINE: WebAudio API</span>
+          <span class="highlight-green">APP REQ: NONE (PWA)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer CTA -->
+    <div class="footer-cta">
+      <p>Comment <strong>"SYNC"</strong> to test the 0ms engine tonight 🫀</p>
+      <div class="footer-sub">Works on any browser · Zero downloads · twoheartsbeat.live</div>
+    </div>
+  </main>
+
+  <footer class="bottom-branding">
+    <span>♥</span> twoheartsbeat.live · Ultra-Low Latency NTP Engine <span>♥</span>
+  </footer>
+</body>
+</html>

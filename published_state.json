@@ -9,10 +9,11 @@
     7,
     8,
     9,
-    10
+    10,
+    11
   ],
-  "last_published": 10,
-  "last_published_at": "2026-10-16T23:22:35.875019+05:30",
+  "last_published": 11,
+  "last_published_at": "2026-10-21T14:01:00+00:00",
   "history": [
     {
       "day": 1,
@@ -36,15 +37,13 @@
       "day": 4,
       "post_id": "17992575363047675",
       "permalink": "https://www.instagram.com/p/DeXRpB3n5PA/",
-      "title": "5 Songs That Hit Different Synced",
-      "published_at": "2026-10-11T23:43:23.731310+05:30"
+      "title": "5 Songs That Hit Different Synced"
     },
     {
       "day": 5,
       "post_id": "18126352054881451",
       "permalink": "https://www.instagram.com/reel/DeXUye-Ew9m/",
-      "title": "Why Spotify Jam Always Desyncs (Baarishein)",
-      "published_at": "2026-10-12T00:11:16.325272+05:30"
+      "title": "Why Spotify Jam Always Desyncs (Baarishein)"
     },
     {
       "day": 6,
@@ -80,6 +79,13 @@
       "permalink": "https://www.instagram.com/reel/DekHMJIkdST/",
       "title": "Kho Gaye Hum Kahan",
       "published_at": "2026-10-16T23:22:35.875019+05:30"
+    },
+    {
+      "day": 11,
+      "post_id": "18131634085705141",
+      "permalink": "https://www.instagram.com/p/DepL1BYmqTu/",
+      "title": "4 Rules of LDR That Actually Work",
+      "published_at": "2026-10-21T14:01:00+00:00"
     }
   ]
 }

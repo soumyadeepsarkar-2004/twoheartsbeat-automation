@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Two Hearts Beat - Instagram Reel Motion Graphic</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600;0,9..40,700;1,9..40,400&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600;1,700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    width: 1080px;
+    height: 1920px;
+    background: #080B17;
+    color: #FFFFFF;
+    font-family: 'DM Sans', sans-serif;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* Ambient Mesh Background */
+  .bg-glow-1 {
+    position: absolute;
+    top: 15%;
+    left: -10%;
+    width: 700px;
+    height: 700px;
+    background: radial-gradient(circle, rgba(255, 122, 89, 0.22), transparent 70%);
+    filter: blur(80px);
+    border-radius: 50%;
+    animation: float1 8s infinite alternate ease-in-out;
+  }
+  .bg-glow-2 {
+    position: absolute;
+    bottom: 20%;
+    right: -10%;
+    width: 800px;
+    height: 800px;
+    background: radial-gradient(circle, rgba(200, 255, 79, 0.16), transparent 70%);
+    filter: blur(100px);
+    border-radius: 50%;
+    animation: float2 9s infinite alternate ease-in-out;
+  }
+  .bg-grid {
+    position: absolute;
+    inset: 0;
+    background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    opacity: 0.6;
+  }
+
+  @keyframes float1 {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(80px, 60px) scale(1.15); }
+  }
+  @keyframes float2 {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(-60px, -80px) scale(1.2); }
+  }
+
+  /* Floating Hearts Particle Canvas */
+  #particles-canvas {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  /* Top Navigation Bar */
+  .top-bar {
+    position: absolute;
+    top: 70px;
+    left: 60px;
+    right: 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 10;
+  }
+  .status-pill {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(23, 26, 56, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(20px);
+    padding: 14px 28px;
+    border-radius: 999px;
+    font-family: 'DM Mono', monospace;
+    font-size: 22px;
+    color: #FFFFFF;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+  }
+  .pulse-dot {
+    width: 14px;
+    height: 14px;
+    background: #C8FF4F;
+    border-radius: 50%;
+    box-shadow: 0 0 15px #C8FF4F;
+    animation: blink 1.2s infinite;
+  }
+  @keyframes blink {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.85); }
+  }
+
+  .brand-logo {
+    font-family: 'DM Mono', monospace;
+    font-size: 24px;
+    color: #FF7A59;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  /* Scenes Container */
+  .scenes-container {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 180px 60px 100px 60px;
+    z-index: 5;
+  }
+
+  .scene {
+    position: absolute;
+    width: 960px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    opacity: 0;
+    transform: translateY(40px) scale(0.96);
+    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    pointer-events: none;
+  }
+  .scene.active {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+  }
+
+  /* Scene 1: The LDR Hook */
+  .tag-badge {
+    background: rgba(255, 94, 146, 0.2);
+    border: 1px solid rgba(255, 94, 146, 0.5);
+    color: #FF9DBE;
+    font-family: 'DM Mono', monospace;
+    font-size: 20px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    padding: 12px 28px;
+    border-radius: 12px;
+    margin-bottom: 30px;
+  }
+  .hero-headline {
+    font-family: 'Playfair Display', serif;
+    font-size: 96px;
+    line-height: 1.05;
+    text-align: center;
+    margin-bottom: 40px;
+    font-weight: 700;
+  }
+  .hero-headline em {
+    font-style: italic;
+    color: #FF7A59;
+    font-weight: 500;
+  }
+
+  /* Chat Bubble Comparison */
+  .chat-box {
+    width: 860px;
+    background: rgba(16, 20, 44, 0.75);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 32px;
+    padding: 40px;
+    backdrop-filter: blur(25px);
+    box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    margin-top: 20px;
+  }
+  .bubble {
+    padding: 22px 32px;
+    border-radius: 24px;
+    font-size: 26px;
+    line-height: 1.4;
+    max-width: 80%;
+  }
+  .bubble-left {
+    align-self: flex-start;
+    background: rgba(255, 255, 255, 0.08);
+    border-bottom-left-radius: 6px;
+  }
+  .bubble-right {
+    align-self: flex-end;
+    background: linear-gradient(135deg, #FF7A59, #FF5E92);
+    color: white;
+    border-bottom-right-radius: 6px;
+    box-shadow: 0 10px 25px rgba(255, 94, 146, 0.35);
+  }
+  .error-tag {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    background: rgba(255, 75, 75, 0.15);
+    border: 1px solid rgba(255, 75, 75, 0.4);
+    color: #FF7070;
+    padding: 16px 28px;
+    border-radius: 16px;
+    font-family: 'DM Mono', monospace;
+    font-size: 22px;
+    font-weight: 600;
+  }
+
+  /* Scene 2: Phone Mockup & Sync Lifeline */
+  .sync-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    width: 100%;
+  }
+  .dual-avatars {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 840px;
+    background: rgba(13, 16, 39, 0.9);
+    border: 1px solid rgba(200, 255, 79, 0.4);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.1);
+    border-radius: 32px;
+    padding: 30px 40px;
+  }
+  .avatar-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+  .avatar-circle {
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    background: #171A38;
+    border: 3px solid #C8FF4F;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 48px;
+    box-shadow: 0 0 25px rgba(200, 255, 79, 0.4);
+  }
+  .avatar-name {
+    font-size: 24px;
+    font-weight: 700;
+    color: white;
+  }
+  .avatar-city {
+    font-family: 'DM Mono', monospace;
+    font-size: 18px;
+    color: #C8FF4F;
+    letter-spacing: 1px;
+  }
+
+  .heartbeat-line-container {
+    flex: 1;
+    margin: 0 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+  .pulse-svg {
+    width: 100%;
+    height: 60px;
+  }
+  .sync-status-badge {
+    background: #C8FF4F;
+    color: #080B17;
+    font-family: 'DM Mono', monospace;
+    font-size: 18px;
+    font-weight: 700;
+    padding: 6px 18px;
+    border-radius: 999px;
+    letter-spacing: 1.5px;
+    box-shadow: 0 0 20px rgba(200, 255, 79, 0.6);
+  }
+
+  /* Mockup Frame showing Web App */
+  .phone-frame {
+    width: 780px;
+    height: 980px;
+    border-radius: 48px;
+    background: #10142C;
+    border: 6px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 40px 90px rgba(0,0,0,0.8), 0 0 40px rgba(255, 122, 89, 0.2);
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+  .phone-screen-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+  }
+
+  /* Scene 3: Floating Player Widget */
+  .player-card {
+    width: 880px;
+    background: rgba(13, 16, 39, 0.95);
+    border: 2px solid rgba(255, 122, 89, 0.45);
+    box-shadow: 0 30px 80px rgba(0,0,0,0.8), 0 0 40px rgba(255, 122, 89, 0.25);
+    border-radius: 36px;
+    padding: 40px;
+    backdrop-filter: blur(30px);
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+  .track-header {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+  }
+  .vinyl-art {
+    width: 120px;
+    height: 120px;
+    border-radius: 28px;
+    background: #171A38;
+    border: 2px solid rgba(255, 122, 89, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 50px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    animation: rotateVinyl 8s linear infinite;
+  }
+  @keyframes rotateVinyl {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  .track-meta {
+    flex: 1;
+  }
+  .track-title {
+    font-size: 38px;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 6px;
+  }
+  .track-artist {
+    font-family: 'DM Mono', monospace;
+    font-size: 24px;
+    color: #FF7A59;
+  }
+  .audio-eq-bars {
+    display: flex;
+    align-items: flex-end;
+    gap: 6px;
+    height: 50px;
+  }
+  .eq-bar {
+    width: 8px;
+    background: #C8FF4F;
+    border-radius: 4px;
+    animation: bounceEq 1s ease-in-out infinite alternate;
+  }
+  .eq-bar:nth-child(1) { height: 20px; animation-delay: 0.1s; }
+  .eq-bar:nth-child(2) { height: 45px; animation-delay: 0.3s; background: #FF7A59; }
+  .eq-bar:nth-child(3) { height: 35px; animation-delay: 0.2s; background: #FF5E92; }
+  .eq-bar:nth-child(4) { height: 50px; animation-delay: 0.4s; }
+  .eq-bar:nth-child(5) { height: 28px; animation-delay: 0.15s; background: #FF7A59; }
+
+  @keyframes bounceEq {
+    0% { height: 10px; }
+    100% { height: 50px; }
+  }
+
+  .progress-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .progress-bar {
+    width: 100%;
+    height: 12px;
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 999px;
+    overflow: hidden;
+    position: relative;
+  }
+  .progress-fill {
+    height: 100%;
+    width: 48%;
+    background: #C8FF4F;
+    box-shadow: 0 0 20px #C8FF4F;
+    border-radius: 999px;
+  }
+  .timecodes {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'DM Mono', monospace;
+    font-size: 20px;
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 10px;
+  }
+  .feature-chip {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 18px;
+    padding: 16px;
+    text-align: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 18px;
+    color: #E2E8F0;
+  }
+
+  /* Scene 4: Curated Playlists */
+  .playlist-deck {
+    display: flex;
+    gap: 24px;
+    width: 100%;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  .playlist-card {
+    flex: 1;
+    background: rgba(23, 26, 56, 0.9);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 28px;
+    padding: 30px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+  }
+  .playlist-card.active-p {
+    border-color: #C8FF4F;
+    box-shadow: 0 0 35px rgba(200, 255, 79, 0.3);
+    transform: translateY(-10px);
+  }
+  .p-category {
+    font-family: 'DM Mono', monospace;
+    font-size: 16px;
+    text-transform: uppercase;
+    color: #FF9DBE;
+  }
+  .p-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    font-weight: 700;
+  }
+  .p-tracks {
+    font-size: 18px;
+    color: rgba(255, 255, 255, 0.6);
+    line-height: 1.5;
+  }
+
+  /* Scene 5: Payoff & Call To Action */
+  .cta-card {
+    width: 880px;
+    background: rgba(16, 20, 44, 0.92);
+    border: 2px solid rgba(200, 255, 79, 0.5);
+    border-radius: 40px;
+    padding: 60px 40px;
+    text-align: center;
+    box-shadow: 0 35px 80px rgba(0,0,0,0.8), 0 0 50px rgba(200, 255, 79, 0.25);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 32px;
+  }
+  .cta-button {
+    background: #C8FF4F;
+    color: #080B17;
+    font-family: 'DM Mono', monospace;
+    font-size: 32px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    padding: 24px 60px;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: 0 0 35px rgba(200, 255, 79, 0.7);
+    animation: ctaPulse 1.8s infinite alternate ease-in-out;
+  }
+  @keyframes ctaPulse {
+    0% { transform: scale(1); box-shadow: 0 0 25px rgba(200, 255, 79, 0.5); }
+    100% { transform: scale(1.06); box-shadow: 0 0 55px rgba(200, 255, 79, 0.9); }
+  }
+
+  .comment-callout {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px dashed rgba(255, 122, 89, 0.6);
+    padding: 20px 40px;
+    border-radius: 20px;
+    font-size: 26px;
+    color: #FFD1C1;
+  }
+  .comment-callout strong {
+    color: #C8FF4F;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 2px;
+  }
+
+  /* Bottom Permanent Branding */
+  .bottom-branding {
+    position: absolute;
+    bottom: 80px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    font-family: 'DM Mono', monospace;
+    font-size: 22px;
+    color: rgba(255, 255, 255, 0.7);
+    z-index: 10;
+  }
+  .bottom-branding span {
+    color: #FF7A59;
+  }
+</style>
+</head>
+<body>
+
+  <!-- Ambient Glow -->
+  <div class="bg-glow-1"></div>
+  <div class="bg-glow-2"></div>
+  <div class="bg-grid"></div>
+  <canvas id="particles-canvas"></canvas>
+
+  <!-- Top Status Bar -->
+  <header class="top-bar">
+    <div class="status-pill">
+      <div class="pulse-dot"></div>
+      <span>TWO HEARTS BEAT · LIVE</span>
+    </div>
+    <div class="brand-logo">twoheartsbeat.live</div>
+  </header>
+
+  <!-- Main Scenes Container -->
+  <div class="scenes-container">
+
+    <!-- SCENE 1 (0s - 5s): The LDR Distance Reality -->
+    <div class="scene" id="scene-1">
+      <div class="tag-badge">📍 1,700 KM APART · 02:00 AM</div>
+      <h1 class="hero-headline">Long Distance<br><em>Hits Different.</em></h1>
+      <div class="chat-box">
+        <div class="bubble bubble-left">"Hey, play Iktara on 3... 2... 1..."</div>
+        <div class="bubble bubble-right">"Wait, you're 3 seconds ahead! 😭"</div>
+        <div class="error-tag">❌ Audio Lag Ruins The Late-Night Mood</div>
+      </div>
+    </div>
+
+    <!-- SCENE 2 (5s - 11s): The Real Solution & Sync Wave -->
+    <div class="scene" id="scene-2">
+      <div class="tag-badge" style="border-color: #C8FF4F; color: #C8FF4F;">✦ THE FIX: TWO HEARTS BEAT</div>
+      <h1 class="hero-headline" style="font-size: 80px; margin-bottom: 25px;">listen <em>together.</em></h1>
+      
+      <div class="sync-container">
+        <div class="dual-avatars">
+          <div class="avatar-card">
+            <div class="avatar-circle">🧑🏽</div>
+            <div class="avatar-name">Delhi</div>
+            <div class="avatar-city">PERSON 1</div>
+          </div>
+          
+          <div class="heartbeat-line-container">
+            <svg class="pulse-svg" viewBox="0 0 200 40">
+              <path d="M0,20 L60,20 L75,5 L85,35 L95,10 L105,25 L115,20 L200,20" fill="none" stroke="#FF7A59" stroke-width="4" stroke-linecap="round"/>
+            </svg>
+            <div class="sync-status-badge">0.00ms DELAY · PERFECT SYNC</div>
+          </div>
+
+          <div class="avatar-card">
+            <div class="avatar-circle" style="border-color: #FF7A59; box-shadow: 0 0 25px rgba(255,122,89,0.4);">👩🏽</div>
+            <div class="avatar-name">Bangalore</div>
+            <div class="avatar-city" style="color: #FF7A59;">PERSON 2</div>
+          </div>
+        </div>
+
+        <div style="font-size: 26px; color: rgba(255,255,255,0.85); text-align: center; max-width: 760px; line-height: 1.5;">
+          No countdowns. No awkward lag. Both listeners hear the <strong>exact same millisecond</strong> of every song.
+        </div>
+      </div>
+    </div>
+
+    <!-- SCENE 3 (11s - 17s): The Real Web Player UI -->
+    <div class="scene" id="scene-3">
+      <div class="tag-badge" style="border-color: #FF7A59; color: #FF9DBE;">🎵 NOW STREAMING IN PRIVATE ROOM</div>
+      <div class="player-card">
+        <div class="track-header">
+          <div class="vinyl-art">🫀</div>
+          <div class="track-meta">
+            <div class="track-title">Iktara</div>
+            <div class="track-artist">Tochi Raina · Kavita Seth</div>
+          </div>
+          <div class="audio-eq-bars">
+            <div class="eq-bar"></div>
+            <div class="eq-bar"></div>
+            <div class="eq-bar"></div>
+            <div class="eq-bar"></div>
+            <div class="eq-bar"></div>
+          </div>
+        </div>
+
+        <div class="progress-wrap">
+          <div class="progress-bar">
+            <div class="progress-fill"></div>
+          </div>
+          <div class="timecodes">
+            <span>02:14</span>
+            <span style="color: #C8FF4F; font-weight: 700;">● SYNC LOCKED</span>
+            <span>04:11</span>
+          </div>
+        </div>
+
+        <div class="features-grid">
+          <div class="feature-chip">✦ Ad-Free Stream</div>
+          <div class="feature-chip">✦ YouTube & Spotify</div>
+          <div class="feature-chip">✦ Shared Music Diary</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCENE 4 (17s - 22s): Curated Indian Playlists -->
+    <div class="scene" id="scene-4">
+      <div class="tag-badge">🎧 3 CURATED ROOM PLAYLISTS</div>
+      <h1 class="hero-headline" style="font-size: 76px; margin-bottom: 20px;">Pick The <em>Feeling.</em></h1>
+      
+      <div class="playlist-deck">
+        <div class="playlist-card active-p">
+          <div class="p-category">The Nostalgia</div>
+          <div class="p-title">Midnight Journey</div>
+          <div class="p-tracks">Iktara · Safarnama · Matargashti</div>
+        </div>
+        <div class="playlist-card">
+          <div class="p-category" style="color: #A895FF;">Late Night</div>
+          <div class="p-title">Gen Z Chill</div>
+          <div class="p-tracks">Anuv Jain · Prateek Kuhad · Zaeden</div>
+        </div>
+        <div class="playlist-card">
+          <div class="p-category" style="color: #70D4BD;">Midnight</div>
+          <div class="p-title">Lofi Beats</div>
+          <div class="p-tracks">Warm tape loops & soft rainy chords</div>
+        </div>
+      </div>
+
+      <p style="margin-top: 35px; font-size: 26px; color: rgba(255,255,255,0.8); text-align: center;">
+        "Window seat, midnight train, and listening to the exact same track together."
+      </p>
+    </div>
+
+    <!-- SCENE 5 (22s - 26s): High Converting Call to Action -->
+    <div class="scene" id="scene-5">
+      <div class="cta-card">
+        <div class="tag-badge" style="border-color: #C8FF4F; color: #C8FF4F; margin-bottom: 10px;">100% FREE · NO APP INSTALL REQUIRED</div>
+        <h1 class="hero-headline" style="font-size: 88px; margin-bottom: 10px;">Vibe Tonight On<br><em style="color: #C8FF4F;">twoheartsbeat.live</em></h1>
+        
+        <div class="cta-button">
+          <span>ENTER THE ROOM</span>
+          <span>↗</span>
+        </div>
+
+        <div class="comment-callout">
+          Comment <strong>"SYNC"</strong> below & I'll DM your private room link! 🫀
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Permanent Bottom Branding -->
+  <footer class="bottom-branding">
+    <span>♥</span> twoheartsbeat.live · Link in Bio <span>♥</span>
+  </footer>
+
+  <script>
+    // Particle Animation Canvas
+    const canvas = document.getElementById('particles-canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = 1080;
+    canvas.height = 1920;
+
+    const particles = [];
+    for (let i = 0; i < 35; i++) {
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        size: Math.random() * 8 + 4,
+        speedY: Math.random() * 1.5 + 0.5,
+        speedX: (Math.random() - 0.5) * 0.8,
+        opacity: Math.random() * 0.6 + 0.2,
+        color: Math.random() > 0.5 ? '#FF7A59' : '#C8FF4F'
+      });
+    }
+
+    function animateParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(p => {
+        p.y -= p.speedY;
+        p.x += p.speedX;
+        if (p.y < 0) {
+          p.y = canvas.height;
+          p.x = Math.random() * canvas.width;
+        }
+        ctx.fillStyle = p.color;
+        ctx.globalAlpha = p.opacity;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fill();
+      });
+      requestAnimationFrame(animateParticles);
+    }
+    animateParticles();
+
+    // Timeline Director for Scenes
+    const scenes = [
+      document.getElementById('scene-1'),
+      document.getElementById('scene-2'),
+      document.getElementById('scene-3'),
+      document.getElementById('scene-4'),
+      document.getElementById('scene-5')
+    ];
+
+    function showScene(idx) {
+      scenes.forEach((s, i) => {
+        if (i === idx) {
+          s.classList.add('active');
+        } else {
+          s.classList.remove('active');
+        }
+      });
+    }
+
+    // Sequence (Total 26 seconds):
+    // 0.0s - 4.5s  : Scene 1 (The Distance Dilemma)
+    // 4.5s - 10.5s : Scene 2 (Two Hearts Beat Solution & Lifeline)
+    // 10.5s - 16.5s: Scene 3 (Live Music Player & Waveform)
+    // 16.5s - 21.5s: Scene 4 (Curated Playlists)
+    // 21.5s - 26.0s: Scene 5 (Payoff CTA)
+
+    showScene(0);
+    setTimeout(() => showScene(1), 4500);
+    setTimeout(() => showScene(2), 10500);
+    setTimeout(() => showScene(3), 16500);
+    setTimeout(() => showScene(4), 21500);
+  </script>
+</body>
+</html>

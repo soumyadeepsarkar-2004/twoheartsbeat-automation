@@ -64,8 +64,11 @@ def get_current_state():
     return {"published_days": [], "last_published": 0, "history": []}
 
 def get_next_day(state):
-    last = state.get("last_published", 0)
-    return last + 1
+    published = set(state.get("published_days", []))
+    for d in range(1, 31):
+        if d not in published:
+            return d
+    return state.get("last_published", 0) + 1
 
 def save_published_state(day_num, post_id, permalink, title):
     state = get_current_state()
@@ -289,6 +292,31 @@ def publish_with_retry(target_day, max_retries=3):
                 p_res = make_meta_request(container_url, data=p_data)
                 container_id = p_res.get("id")
                 print(f"✅ CAROUSEL PARENT CONTAINER CREATED: {container_id}", flush=True)
+
+                # Poll status for Carousel Parent to prevent Media ID not available error
+                status_url = f"https://graph.instagram.com/v19.0/{container_id}?fields=status_code,status&access_token={token}"
+                print("Polling Meta carousel processing servers...", flush=True)
+
+                carousel_finished = False
+                for poll in range(30):
+                    time.sleep(5)
+                    try:
+                        s_res = make_meta_request(status_url)
+                        status = s_res.get("status_code")
+                        print(f"  Carousel Poll {poll+1}/30: Status = {status}", flush=True)
+                        if status == "FINISHED":
+                            carousel_finished = True
+                            break
+                        elif status == "ERROR":
+                            print(f"  ❌ Meta carousel error: {s_res}", flush=True)
+                            break
+                    except Exception as pe:
+                        print(f"  Poll transient warning: {pe}", flush=True)
+
+                if not carousel_finished:
+                    print(f"⚠️ Carousel ingestion not ready, retrying in 10s... (Attempt {attempt_retry} failed)", flush=True)
+                    time.sleep(10)
+                    continue
 
             # Publish Container to live feed
             print("Publishing container to live feed...", flush=True)
