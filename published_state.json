@@ -13,10 +13,11 @@
     11,
     12,
     13,
-    14
+    14,
+    15
   ],
-  "last_published": 14,
-  "last_published_at": "2026-10-23T23:40:11.911541+05:30",
+  "last_published": 15,
+  "last_published_at": "2026-10-24T22:45:58.608605+05:30",
   "history": [
     {
       "day": 1,
@@ -110,6 +111,13 @@
       "permalink": "https://www.instagram.com/reel/De2KxTEAjJz/",
       "title": "Kaise Hua",
       "published_at": "2026-10-23T23:40:11.911541+05:30"
+    },
+    {
+      "day": 15,
+      "post_id": "18229025992331352",
+      "permalink": "https://www.instagram.com/reel/De4pXM7ESEZ/",
+      "title": "Baarishein",
+      "published_at": "2026-10-24T22:45:58.608605+05:30"
     }
   ]
 }
