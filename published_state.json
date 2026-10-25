@@ -14,10 +14,11 @@
     12,
     13,
     14,
-    15
+    15,
+    16
   ],
-  "last_published": 15,
-  "last_published_at": "2026-10-24T22:45:58.608605+05:30",
+  "last_published": 16,
+  "last_published_at": "2026-10-25T22:58:30.444954+05:30",
   "history": [
     {
       "day": 1,
@@ -118,6 +119,13 @@
       "permalink": "https://www.instagram.com/reel/De4pXM7ESEZ/",
       "title": "Baarishein",
       "published_at": "2026-10-24T22:45:58.608605+05:30"
+    },
+    {
+      "day": 16,
+      "post_id": "18110176913220933",
+      "permalink": "https://www.instagram.com/reel/De7PmyOCdiK/",
+      "title": "Iktara",
+      "published_at": "2026-10-25T22:58:30.444954+05:30"
     }
   ]
 }
