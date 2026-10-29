@@ -380,6 +380,10 @@ def main():
     else:
         target_day = get_next_day(state)
 
+    if target_day > 30:
+        print("🎉 All 30 days have been published successfully! The 30-day campaign is complete.", flush=True)
+        sys.exit(0)
+
     # Check idempotency
     force_env = os.environ.get("FORCE_PUBLISH", "").lower() in ("true", "1", "yes")
     force_run = args.force or force_env
