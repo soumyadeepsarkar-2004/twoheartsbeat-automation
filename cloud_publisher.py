@@ -41,9 +41,10 @@ if not token or not account_id:
     print("❌ ERROR: Missing META_ACCESS_TOKEN or INSTAGRAM_ACCOUNT_ID environment variables.", flush=True)
     sys.exit(1)
 
-LOG_FILE = "log.md"
-DB_FILE = "content_database.json"
-STATE_FILE = "published_state.json"
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+LOG_FILE = os.path.join(SCRIPT_DIR, "log.md")
+DB_FILE = os.path.join(SCRIPT_DIR, "content_database.json")
+STATE_FILE = os.path.join(SCRIPT_DIR, "published_state.json")
 
 if not os.path.exists(DB_FILE):
     # Try parent or local scratch path
