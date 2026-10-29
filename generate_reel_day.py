@@ -78,6 +78,8 @@ def render_day_reel(day_num):
     track_title = data.get("track_title", "Faasle")
     track_artist = data.get("track_artist", "Aditya Rikhari")
     quote = data.get("quote", "Because kilometers disappear when you listen at the exact same millisecond.")
+    drift_ms = str(data.get("drift_ms", "1,840"))
+    subtitle = data.get("subtitle", data.get("sub", "When you both listen to the exact same second, distance stops existing."))
 
     # Apply substitutions
     html = html.replace("{{BADGE}}", badge)
@@ -89,6 +91,8 @@ def render_day_reel(day_num):
     html = html.replace("{{TRACK_TITLE}}", track_title)
     html = html.replace("{{TRACK_ARTIST}}", track_artist)
     html = html.replace("{{QUOTE}}", quote)
+    html = html.replace("{{DRIFT_MS}}", drift_ms)
+    html = html.replace("{{SUBTITLE}}", subtitle)
 
     # Legacy replacements if using older template
     html = html.replace("DELHI ↔ BANGALORE · 1,700 KM", badge)

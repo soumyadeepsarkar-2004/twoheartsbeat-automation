@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Two Hearts Beat - Soundwave Lab & Oscilloscope Teardown</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,400;0,500;0,600;1,400&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=Syne:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    width: 1080px;
+    height: 1920px;
+    background: #03050B;
+    color: #FFFFFF;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* Deep Lab Ambient Glow */
+  .bg-ambient {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 15%, rgba(20, 30, 60, 0.7) 0%, transparent 65%),
+                radial-gradient(circle at 15% 75%, rgba(255, 75, 114, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 85% 75%, rgba(52, 211, 153, 0.18) 0%, transparent 50%);
+  }
+
+  /* Oscilloscope Reticle & Tech Grid */
+  .grid-pattern {
+    position: absolute;
+    inset: 0;
+    background-image: 
+      linear-gradient(rgba(56, 189, 248, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(56, 189, 248, 0.05) 1px, transparent 1px),
+      radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.03) 2px, transparent 2px);
+    background-size: 40px 40px, 40px 40px, 120px 120px;
+  }
+
+  .stage {
+    position: absolute;
+    inset: 60px 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  /* Top Lab Header */
+  .lab-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(13, 19, 36, 0.85);
+    border: 1.5px solid rgba(56, 189, 248, 0.25);
+    border-radius: 24px;
+    padding: 20px 28px;
+    backdrop-filter: blur(20px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  }
+  .lab-brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .brand-icon {
+    width: 44px;
+    height: 44px;
+    background: linear-gradient(135deg, #FF4B72, #38BDF8);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
+  }
+  .brand-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    background: linear-gradient(90deg, #FFFFFF, #94A3B8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .lab-telemetry {
+    font-family: 'DM Mono', monospace;
+    font-size: 17px;
+    color: #38BDF8;
+    background: rgba(56, 189, 248, 0.1);
+    padding: 8px 16px;
+    border-radius: 999px;
+    border: 1px solid rgba(56, 189, 248, 0.3);
+  }
+
+  /* Hero Hook Banner */
+  .hero-box {
+    margin-top: 24px;
+    text-align: center;
+  }
+  .badge-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 75, 114, 0.15);
+    border: 1px solid rgba(255, 75, 114, 0.4);
+    color: #FF7A59;
+    padding: 8px 20px;
+    border-radius: 999px;
+    font-family: 'DM Mono', monospace;
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+  }
+  .hero-headline {
+    font-size: 50px;
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -1.5px;
+    color: #FFFFFF;
+  }
+  .hero-headline span {
+    background: linear-gradient(135deg, #FF4B72, #FF7A59);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* Dual Oscilloscope Scope Screen */
+  .oscilloscope-screen {
+    background: #060A14;
+    border: 2px solid rgba(56, 189, 248, 0.35);
+    border-radius: 36px;
+    padding: 32px 36px;
+    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.8), inset 0 0 50px rgba(56, 189, 248, 0.06);
+    position: relative;
+    overflow: hidden;
+    margin: 20px 0;
+  }
+  .screen-reflection {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 40%;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, transparent 100%);
+    pointer-events: none;
+  }
+
+  /* Channel Block */
+  .channel-block {
+    margin-bottom: 26px;
+    position: relative;
+  }
+  .channel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  .channel-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 20px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .channel-a-indicator {
+    width: 14px;
+    height: 14px;
+    background: #FF4B72;
+    border-radius: 50%;
+    box-shadow: 0 0 14px #FF4B72;
+  }
+  .channel-b-indicator {
+    width: 14px;
+    height: 14px;
+    background: #34D399;
+    border-radius: 50%;
+    box-shadow: 0 0 14px #34D399;
+  }
+  .channel-readout {
+    font-family: 'DM Mono', monospace;
+    font-size: 19px;
+    font-weight: 600;
+  }
+  .readout-bad {
+    color: #FF4B72;
+    background: rgba(255, 75, 114, 0.12);
+    padding: 6px 14px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 75, 114, 0.3);
+  }
+  .readout-good {
+    color: #34D399;
+    background: rgba(52, 211, 153, 0.12);
+    padding: 6px 14px;
+    border-radius: 8px;
+    border: 1px solid rgba(52, 211, 153, 0.3);
+  }
+
+  /* Waveform Displays */
+  .waveform-box {
+    height: 140px;
+    background: rgba(2, 4, 10, 0.7);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+  }
+  .wave-centerline {
+    position: absolute;
+    width: 100%;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.1);
+    border-top: 1px dashed rgba(255, 255, 255, 0.2);
+  }
+
+  /* SVG Wave Animations */
+  .wave-svg {
+    width: 200%;
+    height: 100%;
+  }
+  .wave-desync {
+    stroke: #FF4B72;
+    stroke-width: 4px;
+    fill: none;
+    filter: drop-shadow(0 0 8px rgba(255, 75, 114, 0.8));
+    animation: scrollDesync 2.5s linear infinite;
+  }
+  .wave-sync {
+    stroke: #34D399;
+    stroke-width: 4.5px;
+    fill: none;
+    filter: drop-shadow(0 0 10px rgba(52, 211, 153, 0.9));
+    animation: scrollSync 2s linear infinite;
+  }
+
+  @keyframes scrollDesync {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  @keyframes scrollSync {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  /* Tech Diagnostics HUD Row */
+  .diagnostics-hud {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 20px;
+  }
+  .hud-stat {
+    background: rgba(13, 20, 38, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 18px;
+    padding: 16px;
+    text-align: center;
+  }
+  .stat-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.5);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+  }
+  .stat-val {
+    font-family: 'DM Mono', monospace;
+    font-size: 24px;
+    font-weight: 700;
+  }
+  .val-red { color: #FF4B72; }
+  .val-green { color: #34D399; }
+  .val-blue { color: #38BDF8; }
+
+  /* Audio Track Card */
+  .song-card {
+    background: rgba(16, 24, 46, 0.9);
+    border: 1.5px solid rgba(255, 255, 255, 0.18);
+    border-radius: 26px;
+    padding: 24px 28px;
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+  }
+  .vinyl-cover {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #252D48 30%, #0A0E1A 75%);
+    border: 2px solid rgba(255, 255, 255, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    box-shadow: 0 0 20px rgba(56, 189, 248, 0.3);
+    animation: rotateVinyl 8s linear infinite;
+  }
+  @keyframes rotateVinyl {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  .song-details {
+    flex: 1;
+  }
+  .song-title {
+    font-size: 28px;
+    font-weight: 800;
+    color: #FFFFFF;
+    margin-bottom: 4px;
+  }
+  .song-artist {
+    font-size: 18px;
+    color: rgba(255, 255, 255, 0.65);
+    font-weight: 500;
+  }
+  .song-badge {
+    background: rgba(56, 189, 248, 0.12);
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    padding: 8px 16px;
+    border-radius: 999px;
+    font-family: 'DM Mono', monospace;
+    font-size: 16px;
+    color: #38BDF8;
+  }
+
+  /* Bottom Call to Action */
+  .cta-panel {
+    background: linear-gradient(135deg, rgba(200, 255, 79, 0.12), rgba(56, 189, 248, 0.12));
+    border: 2px solid #C8FF4F;
+    border-radius: 28px;
+    padding: 26px 32px;
+    text-align: center;
+    box-shadow: 0 0 40px rgba(200, 255, 79, 0.2);
+  }
+  .cta-title {
+    font-size: 30px;
+    font-weight: 800;
+    margin-bottom: 6px;
+  }
+  .cta-title span {
+    color: #C8FF4F;
+  }
+  .cta-desc {
+    font-family: 'DM Mono', monospace;
+    font-size: 18px;
+    color: rgba(255, 255, 255, 0.7);
+  }
+</style>
+</head>
+<body>
+  <div class="bg-ambient"></div>
+  <div class="grid-pattern"></div>
+
+  <div class="stage">
+    <!-- Lab Telemetry Header -->
+    <header class="lab-header">
+      <div class="lab-brand">
+        <div class="brand-icon">⚡</div>
+        <div class="brand-title">TWO HEARTS BEAT LAB</div>
+      </div>
+      <div class="lab-telemetry">NTP DRIFT: ±0.00 MS</div>
+    </header>
+
+    <!-- Hero Hook -->
+    <div class="hero-box">
+      <div class="badge-tag">AUDIO DRIFT BENCHMARK</div>
+      <h1 class="hero-headline">{{HEADLINE}}</h1>
+    </div>
+
+    <!-- Oscilloscope Scope Screen -->
+    <div class="oscilloscope-screen">
+      <div class="screen-reflection"></div>
+
+      <!-- Channel A: Spotify Jam (Desync) -->
+      <div class="channel-block">
+        <div class="channel-header">
+          <div class="channel-title">
+            <div class="channel-a-indicator"></div>
+            <span>CH 1: SPOTIFY JAM (CLOUD WEBSOCKET)</span>
+          </div>
+          <div class="channel-readout readout-bad">+{{DRIFT_MS}} MS DRIFT (OUT OF PHASE)</div>
+        </div>
+        <div class="waveform-box">
+          <div class="wave-centerline"></div>
+          <svg class="wave-svg" viewBox="0 0 2000 140" preserveAspectRatio="none">
+            <path class="wave-desync" d="M 0 70 Q 50 15 100 70 T 200 70 T 300 120 T 400 40 T 500 110 T 600 70 T 700 20 T 800 120 T 900 60 T 1000 70 T 1100 15 T 1200 70 T 1300 70 T 1400 120 T 1500 40 T 1600 110 T 1700 70 T 1800 20 T 1900 120 T 2000 70" />
+          </svg>
+        </div>
+      </div>
+
+      <!-- Channel B: Two Hearts Beat (0ms Lock) -->
+      <div class="channel-block" style="margin-bottom: 0;">
+        <div class="channel-header">
+          <div class="channel-title">
+            <div class="channel-a-indicator" style="background:#34D399; box-shadow:0 0 14px #34D399;"></div>
+            <span>CH 2: TWO HEARTS BEAT (P2P WEBRTC PCM)</span>
+          </div>
+          <div class="channel-readout readout-good">0.00 MS PHASE-LOCKED</div>
+        </div>
+        <div class="waveform-box">
+          <div class="wave-centerline"></div>
+          <svg class="wave-svg" viewBox="0 0 2000 140" preserveAspectRatio="none">
+            <path class="wave-sync" d="M 0 70 Q 50 20 100 70 T 200 70 T 300 70 T 400 70 T 500 70 T 600 70 T 700 70 T 800 70 T 900 70 T 1000 70 T 1100 20 T 1200 70 T 1300 70 T 1400 70 T 1500 70 T 1600 70 T 1700 70 T 1800 70 T 1900 70 T 2000 70" />
+          </svg>
+        </div>
+      </div>
+
+      <!-- Diagnostics HUD -->
+      <div class="diagnostics-hud">
+        <div class="hud-stat">
+          <div class="stat-label">Buffer Desync</div>
+          <div class="stat-val val-red">1,840 ms</div>
+        </div>
+        <div class="hud-stat">
+          <div class="stat-label">Our Sync Phase</div>
+          <div class="stat-val val-green">0.00 ms</div>
+        </div>
+        <div class="hud-stat">
+          <div class="stat-label">Audio Sample</div>
+          <div class="stat-val val-blue">48 kHz PCM</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Active Song Information Card -->
+    <div class="song-card">
+      <div class="vinyl-cover">💿</div>
+      <div class="song-details">
+        <div class="song-title">{{TRACK_TITLE}}</div>
+        <div class="song-artist">{{TRACK_ARTIST}}</div>
+      </div>
+      <div class="song-badge">100% MATCHED</div>
+    </div>
+
+    <!-- Bottom Conversion Banner -->
+    <div class="cta-panel">
+      <div class="cta-title">Comment <span>"SYNC"</span> to Hear the Difference</div>
+      <div class="cta-desc">Try It Free Tonight · No Sign-Up · twoheartsbeat.live</div>
+    </div>
+  </div>
+</body>
+</html>

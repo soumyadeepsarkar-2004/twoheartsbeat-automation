@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Two Hearts Beat - 2 AM Lockscreen Experience</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,400;0,500;0,600;1,400&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    width: 1080px;
+    height: 1920px;
+    background: #04060E;
+    color: #FFFFFF;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* Deep Atmospheric Glows */
+  .bg-ambient {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 20%, rgba(30, 41, 78, 0.6) 0%, transparent 60%),
+                radial-gradient(circle at 20% 80%, rgba(255, 122, 89, 0.12) 0%, transparent 50%),
+                radial-gradient(circle at 80% 60%, rgba(56, 189, 248, 0.15) 0%, transparent 50%);
+  }
+  .grid-overlay {
+    position: absolute;
+    inset: 0;
+    background-image: linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+
+  /* Phone Stage Mockup */
+  .phone-container {
+    position: absolute;
+    top: 90px;
+    left: 75px;
+    width: 930px;
+    height: 1740px;
+    border-radius: 68px;
+    background: linear-gradient(165deg, rgba(22, 27, 46, 0.95), rgba(10, 13, 24, 0.98));
+    border: 3px solid rgba(255, 255, 255, 0.16);
+    box-shadow: 0 40px 120px rgba(0, 0, 0, 0.85), inset 0 0 3px rgba(255, 255, 255, 0.25);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    padding: 36px 44px 50px 44px;
+  }
+
+  /* Dynamic Island */
+  .island-bar {
+    width: 320px;
+    height: 52px;
+    background: #000000;
+    margin: 0 auto;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    position: relative;
+    z-index: 50;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+    transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .island-lens {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #111424;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  .island-pill {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'DM Mono', monospace;
+    font-size: 14px;
+    color: #34D399;
+  }
+  .island-dot {
+    width: 8px;
+    height: 8px;
+    background: #34D399;
+    border-radius: 50%;
+    box-shadow: 0 0 8px #34D399;
+    animation: pulseDot 1.5s infinite;
+  }
+
+  @keyframes pulseDot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.8); }
+  }
+
+  /* Lockscreen Header */
+  .lock-header {
+    text-align: center;
+    margin-top: 50px;
+  }
+  .lock-icon {
+    font-size: 26px;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 12px;
+  }
+  .lock-date {
+    font-size: 26px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.65);
+    letter-spacing: 0.5px;
+  }
+  .lock-time {
+    font-size: 130px;
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -3px;
+    background: linear-gradient(180deg, #FFFFFF 30%, rgba(255, 255, 255, 0.6) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin: 8px 0;
+  }
+
+  /* WhatsApp Notification Banner */
+  .notif-card {
+    background: rgba(26, 33, 56, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 28px;
+    padding: 22px 26px;
+    margin-top: 30px;
+    backdrop-filter: blur(25px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    animation: slideDownNotif 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  @keyframes slideDownNotif {
+    0% { transform: translateY(-30px); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+  }
+
+  .notif-avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #FF7A59, #FF4B72);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    flex-shrink: 0;
+  }
+  .notif-text {
+    flex: 1;
+  }
+  .notif-top {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4px;
+  }
+  .notif-name {
+    font-weight: 700;
+    font-size: 22px;
+    color: #FFFFFF;
+  }
+  .notif-time {
+    font-size: 17px;
+    color: rgba(255, 255, 255, 0.5);
+  }
+  .notif-msg {
+    font-size: 22px;
+    color: #E2E8F0;
+    line-height: 1.3;
+  }
+  .notif-msg em {
+    font-style: normal;
+    color: #38BDF8;
+    font-weight: 600;
+  }
+
+  /* Two Hearts Beat Live Activity Player */
+  .live-activity-card {
+    background: rgba(14, 18, 32, 0.92);
+    border: 1.5px solid rgba(56, 189, 248, 0.4);
+    border-radius: 36px;
+    padding: 30px 32px;
+    margin-top: 34px;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6), 0 0 30px rgba(56, 189, 248, 0.12);
+    backdrop-filter: blur(30px);
+    position: relative;
+    overflow: hidden;
+  }
+  .live-activity-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #FF7A59, #38BDF8, #34D399);
+  }
+
+  .activity-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+  }
+  .activity-badge {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(56, 189, 248, 0.12);
+    border: 1px solid rgba(56, 189, 248, 0.35);
+    padding: 8px 18px;
+    border-radius: 999px;
+    font-family: 'DM Mono', monospace;
+    font-size: 17px;
+    color: #38BDF8;
+    letter-spacing: 0.5px;
+  }
+  .activity-ping {
+    font-family: 'DM Mono', monospace;
+    font-size: 18px;
+    color: #34D399;
+    font-weight: 600;
+    background: rgba(52, 211, 153, 0.1);
+    padding: 6px 16px;
+    border-radius: 999px;
+    border: 1px solid rgba(52, 211, 153, 0.3);
+  }
+
+  /* Track Info */
+  .track-row {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    margin-bottom: 26px;
+  }
+  .vinyl-art {
+    width: 95px;
+    height: 95px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #2A3048 30%, #0A0D18 70%);
+    border: 3px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 25px rgba(255, 122, 89, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 38px;
+    animation: spinVinyl 6s linear infinite;
+    flex-shrink: 0;
+  }
+  @keyframes spinVinyl {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  .track-details {
+    flex: 1;
+  }
+  .track-title {
+    font-size: 34px;
+    font-weight: 800;
+    color: #FFFFFF;
+    margin-bottom: 6px;
+  }
+  .track-artist {
+    font-size: 21px;
+    color: rgba(255, 255, 255, 0.65);
+    font-weight: 500;
+  }
+
+  /* Animated Spectrum Waveform */
+  .waveform-container {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    height: 55px;
+    gap: 6px;
+    margin: 20px 0 16px 0;
+    padding: 0 10px;
+  }
+  .bar {
+    flex: 1;
+    background: linear-gradient(180deg, #38BDF8, #FF7A59);
+    border-radius: 999px;
+    animation: waveBounce 1.2s ease-in-out infinite alternate;
+  }
+  .bar:nth-child(1) { height: 35%; animation-delay: 0.1s; }
+  .bar:nth-child(2) { height: 75%; animation-delay: 0.3s; }
+  .bar:nth-child(3) { height: 95%; animation-delay: 0.15s; }
+  .bar:nth-child(4) { height: 50%; animation-delay: 0.4s; }
+  .bar:nth-child(5) { height: 85%; animation-delay: 0.25s; }
+  .bar:nth-child(6) { height: 60%; animation-delay: 0.5s; }
+  .bar:nth-child(7) { height: 100%; animation-delay: 0.2s; }
+  .bar:nth-child(8) { height: 45%; animation-delay: 0.35s; }
+  .bar:nth-child(9) { height: 80%; animation-delay: 0.1s; }
+  .bar:nth-child(10){ height: 65%; animation-delay: 0.45s; }
+  .bar:nth-child(11){ height: 90%; animation-delay: 0.3s; }
+  .bar:nth-child(12){ height: 40%; animation-delay: 0.15s; }
+
+  @keyframes waveBounce {
+    0% { transform: scaleY(0.3); }
+    100% { transform: scaleY(1); }
+  }
+
+  /* Progress Bar */
+  .progress-bar-bg {
+    width: 100%;
+    height: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 999px;
+    overflow: hidden;
+    margin-bottom: 12px;
+  }
+  .progress-bar-fill {
+    width: 64%;
+    height: 100%;
+    background: linear-gradient(90deg, #FF7A59, #38BDF8);
+    border-radius: 999px;
+  }
+  .time-stamps {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'DM Mono', monospace;
+    font-size: 17px;
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  /* Route Distance Indicator */
+  .route-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px dashed rgba(255, 255, 255, 0.18);
+    border-radius: 22px;
+    padding: 18px 24px;
+    margin-top: 24px;
+  }
+  .route-city {
+    font-size: 21px;
+    font-weight: 700;
+  }
+  .route-dist {
+    font-family: 'DM Mono', monospace;
+    font-size: 18px;
+    color: #FF7A59;
+    letter-spacing: 1px;
+  }
+
+  /* Bottom Call to Action Card */
+  .bottom-cta-banner {
+    margin-top: auto;
+    background: linear-gradient(135deg, rgba(200, 255, 79, 0.12), rgba(56, 189, 248, 0.12));
+    border: 1.5px solid #C8FF4F;
+    border-radius: 28px;
+    padding: 24px 28px;
+    text-align: center;
+    box-shadow: 0 0 35px rgba(200, 255, 79, 0.2);
+    animation: glowPulse 2s infinite alternate;
+  }
+  @keyframes glowPulse {
+    0% { box-shadow: 0 0 20px rgba(200, 255, 79, 0.15); }
+    100% { box-shadow: 0 0 45px rgba(200, 255, 79, 0.35); }
+  }
+  .cta-headline {
+    font-size: 28px;
+    font-weight: 800;
+    color: #FFFFFF;
+    margin-bottom: 6px;
+  }
+  .cta-headline span {
+    color: #C8FF4F;
+  }
+  .cta-sub {
+    font-family: 'DM Mono', monospace;
+    font-size: 18px;
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  /* Flashlight & Camera Icons */
+  .lock-tools {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    padding: 0 10px;
+  }
+  .tool-circle {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    backdrop-filter: blur(10px);
+  }
+</style>
+</head>
+<body>
+  <div class="bg-ambient"></div>
+  <div class="grid-overlay"></div>
+
+  <main class="phone-container">
+    <!-- Dynamic Island -->
+    <div class="island-bar">
+      <div class="island-pill">
+        <div class="island-dot"></div>
+        <span>twoheartsbeat</span>
+      </div>
+      <div class="island-lens"></div>
+    </div>
+
+    <!-- Lockscreen Header -->
+    <div class="lock-header">
+      <div class="lock-icon">🔒</div>
+      <div class="lock-date">Thursday, October 30</div>
+      <div class="lock-time">02:14</div>
+    </div>
+
+    <!-- WhatsApp Dropdown Notification -->
+    <div class="notif-card">
+      <div class="notif-avatar">🫀</div>
+      <div class="notif-text">
+        <div class="notif-top">
+          <span class="notif-name">Her Voice ❤️</span>
+          <span class="notif-time">Just now</span>
+        </div>
+        <div class="notif-msg">{{QUOTE}}</div>
+      </div>
+    </div>
+
+    <!-- Live Activity Synced Music Player -->
+    <div class="live-activity-card">
+      <div class="activity-top">
+        <div class="activity-badge">
+          <span>●</span>
+          <span>{{BADGE}}</span>
+        </div>
+        <div class="activity-ping">0.00 MS DELAY</div>
+      </div>
+
+      <div class="track-row">
+        <div class="vinyl-art">💿</div>
+        <div class="track-details">
+          <div class="track-title">{{TRACK_TITLE}}</div>
+          <div class="track-artist">{{TRACK_ARTIST}}</div>
+        </div>
+      </div>
+
+      <!-- Real-time Animated Audio Spectrum -->
+      <div class="waveform-container">
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+      </div>
+
+      <div class="progress-bar-bg">
+        <div class="progress-bar-fill"></div>
+      </div>
+      <div class="time-stamps">
+        <span>01:14</span>
+        <span>-02:26</span>
+      </div>
+
+      <div class="route-card">
+        <span class="route-city">{{CITY1}}</span>
+        <span class="route-dist">{{DISTANCE}}</span>
+        <span class="route-city">{{CITY2}}</span>
+      </div>
+    </div>
+
+    <!-- Bottom Action Card -->
+    <div class="bottom-cta-banner">
+      <div class="cta-headline">Comment <span>"SYNC"</span> for Tonight's Room</div>
+      <div class="cta-sub">Free · No App Store Downloads · twoheartsbeat.live</div>
+    </div>
+
+    <!-- Bottom Lockscreen Tools -->
+    <div class="lock-tools">
+      <div class="tool-circle">🔦</div>
+      <div class="tool-circle">📷</div>
+    </div>
+  </main>
+</body>
+</html>

@@ -393,3 +393,12 @@
 | **`/ig-viral`** | Outlier multiple calculations & swipe file curation | `C:\Users\shann\.gemini\instagram\swipe.md` |
 | **`/ig-audit`** | Weekly metric extraction (hold@3s, non-follower reach) | Handled by `run_audit.py` |
 | **`/ig-repurpose`** | Converts top comments & user stories into new reels | Weekly review in operating log |
+
+---
+
+### DAYS 31 - 35: The Advanced Visual Motion & Laboratory Benchmark Arc (Bonus Series)
+- **Day 31 (Reel - Visual Lockscreen):** *The 2:14 AM WhatsApp Test* (Hook #9: Specific Number, Track: *Faasle* by Aditya Rikhari, Template: `template_phone_lockscreen.html`, Voice: `hi-IN-MadhurNeural`). Realistic iPhone 16 Pro Dynamic Island and live lockscreen showing WhatsApp message vs synced audio activity.
+- **Day 32 (Reel - Soundwave Lab):** *Spotify Jam vs Two Hearts Beat on an Oscilloscope* (Hook #3: Nobody Tells You, Track: *Baarishein* by Anuv Jain, Template: `template_soundwave_lab.html`, Voice: `en-IN-PrabhatNeural`). Dual-channel oscilloscope visualizer exposing 1,840ms buffer drift in red vs 0.00ms phase lock in neon green.
+- **Day 33 (Reel - Cinematic Window):** *Mumbai CST to Bangalore: The 984 KM Audio Bridge* (Hook #26: Direct Comparison, Track: *Tum Se Hi*, Template: `template_cinematic_window.html`, Voice: `hi-IN-MadhurNeural`). Rain-streaked night train window overlooking Indian city bokeh lights with animated transit route HUD.
+- **Day 34 (Reel - Campus Lab):** *1 Bar of College WiFi vs 0ms Latency* (Hook #7: Counter-Intuitive, Track: *Kasoor* by Prateek Kuhad, Template: `template_soundwave_lab.html`, Voice: `en-IN-PrabhatNeural`). Demonstrating how WebRTC peer-to-peer data channels maintain 0ms sync even under fluctuating hostel WiFi.
+- **Day 35 (Reel - Viral Retrospective):** *Why 99% of LDR Couples Give Up (And The 1 Sound That Keeps Them)* (Hook #3: Nobody Tells You, Track: *Pee Loon* by Mohit Chauhan, Template: `template_cinematic_window.html`, Voice: `hi-IN-MadhurNeural`). The emotional truth about countdown latency killing late-night intimacy and how shared music bridges any distance.

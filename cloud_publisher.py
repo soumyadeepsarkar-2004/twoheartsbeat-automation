@@ -65,7 +65,8 @@ def get_current_state():
 
 def get_next_day(state):
     published = set(state.get("published_days", []))
-    for d in range(1, 31):
+    total_days = max(len(db.get("days", {})), 30)
+    for d in range(1, total_days + 1):
         if d not in published:
             return d
     return state.get("last_published", 0) + 1
@@ -380,8 +381,9 @@ def main():
     else:
         target_day = get_next_day(state)
 
-    if target_day > 30:
-        print("🎉 All 30 days have been published successfully! The 30-day campaign is complete.", flush=True)
+    total_days = max(len(db.get("days", {})), 30)
+    if target_day > total_days:
+        print(f"🎉 All {total_days} days have been published successfully! The campaign is complete.", flush=True)
         sys.exit(0)
 
     # Check idempotency
