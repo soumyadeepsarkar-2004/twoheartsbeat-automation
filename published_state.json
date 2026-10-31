@@ -17,10 +17,11 @@
     15,
     16,
     17,
-    18
+    18,
+    19
   ],
-  "last_published": 18,
-  "last_published_at": "2026-10-31T02:52:25+05:30",
+  "last_published": 19,
+  "last_published_at": "2026-10-31T23:48:43.907415+05:30",
   "history": [
     {
       "day": 1,
@@ -142,6 +143,13 @@
       "permalink": "https://www.instagram.com/p/DfIiYhvlrQl/",
       "title": "5 Bollywood Songs That Make 1,700 KM Feel Like Nothing",
       "published_at": "2026-10-31T02:52:25+05:30"
+    },
+    {
+      "day": 19,
+      "post_id": "18121819777953504",
+      "permalink": "https://www.instagram.com/reel/DfKUmZRE1jh/",
+      "title": "Alag Aasmaan",
+      "published_at": "2026-10-31T23:48:43.907415+05:30"
     }
   ]
 }
