@@ -1,0 +1,52 @@
+name: 24/7 Lead Responder & Comment Sweeper
+
+on:
+  schedule:
+    # Runs every 4 hours at :30 (avoiding 7:30 PM post window)
+    # 03:30, 07:30, 11:30, 15:30, 19:30, 23:30 UTC
+    # (09:00, 13:00, 17:00, 21:00, 01:00, 05:00 IST)
+    - cron: '30 3,7,11,15,19,23 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: instagram-lead-responder
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  sweep-and-reply:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Execute Live Comment Sweep & Lead Delivery
+        env:
+          META_ACCESS_TOKEN: ${{ secrets.META_ACCESS_TOKEN }}
+          INSTAGRAM_ACCOUNT_ID: ${{ secrets.INSTAGRAM_ACCOUNT_ID }}
+        run: |
+          python cloud_publisher.py --sweep-only
+
+      - name: Commit Processed Comments State
+        if: always()
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add processed_comments.json
+          if ! git diff --cached --quiet; then
+            echo "New comments processed. Committing updated state..."
+            git commit -m "Auto-update processed comments state [skip ci]"
+            git pull --rebase origin main || true
+            git push origin main || (git pull --rebase -Xours origin main && git push origin main)
+          else
+            echo "No new comments to commit."
+          fi

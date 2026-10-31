@@ -2,6 +2,7 @@ import os
 import sys
 import json
 import time
+import random
 import argparse
 import urllib.request
 import urllib.error
@@ -44,6 +45,7 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 LOG_FILE = os.path.join(SCRIPT_DIR, "log.md")
 DB_FILE = os.path.join(SCRIPT_DIR, "content_database.json")
 STATE_FILE = os.path.join(SCRIPT_DIR, "published_state.json")
+COMMENTS_FILE = os.path.join(SCRIPT_DIR, "processed_comments.json")
 
 if not os.path.exists(DB_FILE):
     alt_db = os.path.join(r"C:\Users\shann\.gemini\instagram", "content_database.json")
@@ -52,6 +54,22 @@ if not os.path.exists(DB_FILE):
 
 with open(DB_FILE, "r", encoding="utf-8") as f:
     db = json.load(f)
+
+def get_processed_comments():
+    if os.path.exists(COMMENTS_FILE):
+        try:
+            with open(COMMENTS_FILE, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except Exception:
+            pass
+    return {"replied_comment_ids": []}
+
+def save_processed_comments(data):
+    try:
+        with open(COMMENTS_FILE, "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=2)
+    except Exception as e:
+        print(f"Warning saving processed comments: {e}", flush=True)
 
 def get_current_state():
     if os.path.exists(STATE_FILE):
@@ -157,35 +175,60 @@ def check_if_day_already_on_live_feed(target_day):
         print(f"Warning checking live feed: {e}", flush=True)
     return None
 
+REPLY_TEMPLATES = [
+    "@{user} Here is your private room link: twoheartsbeat.vercel.app 🎧 Zero audio lag between you two! Vibe together tonight 🫀",
+    "@{user} Built this for long distance couples! Hop in here: twoheartsbeat.vercel.app 🎵 Exact same millisecond on both ends.",
+    "@{user} Grab your synced room here: twoheartsbeat.vercel.app 🎧 No app install needed, just send them the code!",
+    "@{user} Here you go! twoheartsbeat.vercel.app 🫀 Create a room and listen together without any delay.",
+    "@{user} Listen together in real-time here: twoheartsbeat.vercel.app 🎧 0ms lag, works on phone & laptop!"
+]
+
+INTENT_KEYWORDS = ["sync", "link", "room", "app", "website", "how", "join", "try", "code", "song"]
+
 def run_comment_sweep():
-    print("💬 Running live comment sweep for keywords 'SYNC' and 'link'...", flush=True)
+    print("💬 Running live comment sweep for inbound intent keywords...", flush=True)
+    state = get_processed_comments()
+    replied_ids = set(state.get("replied_comment_ids", []))
+    new_replies_count = 0
+
     try:
-        media_url = f"https://graph.instagram.com/v19.0/{account_id}/media?fields=id,caption&access_token={token}"
+        media_url = f"https://graph.instagram.com/v19.0/{account_id}/media?fields=id,caption&limit=10&access_token={token}"
         data = make_meta_request(media_url)
         items = data.get("data", [])
-        for item in items[:5]:
+        for item in items:
             m_id = item.get("id")
             c_url = f"https://graph.instagram.com/v19.0/{m_id}/comments?fields=id,text,username&access_token={token}"
             try:
                 c_data = make_meta_request(c_url)
                 for c in c_data.get("data", []):
                     c_id = c.get("id")
+                    if c_id in replied_ids:
+                        continue
                     c_text = c.get("text", "").lower()
                     c_user = c.get("username", "user")
-                    if "sync" in c_text or "link" in c_text:
+
+                    if any(kw in c_text for kw in INTENT_KEYWORDS):
+                        reply_msg = random.choice(REPLY_TEMPLATES).format(user=c_user)
                         reply_url = f"https://graph.instagram.com/v19.0/{c_id}/replies"
                         r_params = {
-                            "message": f"@{c_user} Here is your private room link: twoheartsbeat.vercel.app 🎧 Zero audio lag between you two! Vibe together tonight 🫀",
+                            "message": reply_msg,
                             "access_token": token
                         }
                         r_data = urllib.parse.urlencode(r_params).encode('utf-8')
                         try:
                             make_meta_request(reply_url, data=r_data)
-                            print(f"  ✓ Auto-replied to @{c_user} on comment {c_id}", flush=True)
-                        except Exception:
-                            pass
+                            replied_ids.add(c_id)
+                            new_replies_count += 1
+                            print(f"  ✓ Auto-replied to @{c_user} on comment {c_id}: {reply_msg}", flush=True)
+                            time.sleep(2)
+                        except Exception as re:
+                            print(f"  ⚠️ Reply to @{c_user} failed: {re}", flush=True)
             except Exception:
                 pass
+
+        state["replied_comment_ids"] = list(replied_ids)
+        save_processed_comments(state)
+        print(f"💬 Comment sweep finished. Replied to {new_replies_count} new comments.", flush=True)
     except Exception as e:
         print(f"Comment sweep error: {e}", flush=True)
 
@@ -437,7 +480,12 @@ def main():
     parser = argparse.ArgumentParser(description="Two Hearts Beat Cloud Publisher")
     parser.add_argument("--day", type=int, default=None, help="Specific Day number to publish (default: auto next day)")
     parser.add_argument("--force", action="store_true", help="Force publish even if already published today")
+    parser.add_argument("--sweep-only", action="store_true", help="Only run comment sweep and exit")
     args = parser.parse_args()
+
+    if args.sweep_only:
+        run_comment_sweep()
+        sys.exit(0)
 
     state = get_current_state()
 
