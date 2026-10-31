@@ -22,7 +22,6 @@ BRANCH = "main"
 
 # Fallback tokens for local testing if not in environment
 if not token or not account_id:
-    # Check if local meta_config.json exists
     config_paths = [
         "meta_config.json",
         os.path.join(r"C:\Users\shann\.gemini\instagram", "meta_config.json")
@@ -47,7 +46,6 @@ DB_FILE = os.path.join(SCRIPT_DIR, "content_database.json")
 STATE_FILE = os.path.join(SCRIPT_DIR, "published_state.json")
 
 if not os.path.exists(DB_FILE):
-    # Try parent or local scratch path
     alt_db = os.path.join(r"C:\Users\shann\.gemini\instagram", "content_database.json")
     if os.path.exists(alt_db):
         DB_FILE = alt_db
@@ -79,18 +77,29 @@ def save_published_state(day_num, post_id, permalink, title):
     state["last_published"] = day_num
     now_ist = datetime.now(IST).isoformat()
     state["last_published_at"] = now_ist
-    state["history"].append({
-        "day": day_num,
-        "post_id": post_id,
-        "permalink": permalink,
-        "title": title,
-        "published_at": now_ist
-    })
+    
+    # Avoid duplicate entries in history
+    existing_entries = [h for h in state.get("history", []) if h.get("day") == day_num]
+    if not existing_entries:
+        state["history"].append({
+            "day": day_num,
+            "post_id": post_id,
+            "permalink": permalink,
+            "title": title,
+            "published_at": now_ist
+        })
+    else:
+        existing_entries[0]["post_id"] = post_id
+        existing_entries[0]["permalink"] = permalink
+        existing_entries[0]["title"] = title
+        existing_entries[0]["published_at"] = now_ist
+
     with open(STATE_FILE, "w", encoding="utf-8") as sf:
         json.dump(state, sf, indent=2)
+    print(f"💾 Updated state file: Day {day_num} marked as published ({post_id})", flush=True)
 
 def is_already_published_recently(state, min_hours=12):
-    """Checks if a post was already published recently (within 12 hours) to prevent duplicate runs on catch-up crons."""
+    """Checks if a post was already published recently to prevent duplicate runs on catch-up crons."""
     last_pub_at = state.get("last_published_at")
     if not last_pub_at:
         return False
@@ -108,7 +117,7 @@ def make_meta_request(url, data=None, headers=None, method=None):
         headers = {'User-Agent': 'TwoHeartsBeatCloudAutomator/2.0'}
     req = urllib.request.Request(url, data=data, headers=headers, method=method)
     try:
-        with urllib.request.urlopen(req, timeout=30) as resp:
+        with urllib.request.urlopen(req, timeout=35) as resp:
             return json.loads(resp.read().decode('utf-8'))
     except urllib.error.HTTPError as e:
         error_body = ""
@@ -123,6 +132,30 @@ def make_meta_request(url, data=None, headers=None, method=None):
             raise RuntimeError(f"Meta Graph API HTTP {e.code} Error: {error_body or str(e)}")
     except urllib.error.URLError as e:
         raise RuntimeError(f"Network Connection Error: {e.reason}")
+
+def check_if_day_already_on_live_feed(target_day):
+    """Queries recent live media on Instagram to see if target_day is already published on the profile."""
+    day_str = str(target_day)
+    day_data = db.get("days", {}).get(day_str, {})
+    if not day_data:
+        return None
+    
+    expected_title = (day_data.get("track_title") or day_data.get("headline") or "").lower().strip()
+    expected_caption_snippet = day_data.get("caption", "")[:35].lower().strip()
+    
+    print(f"🔍 Checking Instagram live feed for Day {target_day}...", flush=True)
+    try:
+        media_url = f"https://graph.instagram.com/v19.0/{account_id}/media?fields=id,caption,media_type,permalink,timestamp&limit=15&access_token={token}"
+        res = make_meta_request(media_url)
+        for post in res.get("data", []):
+            caption = post.get("caption", "").lower()
+            if expected_caption_snippet and expected_caption_snippet in caption:
+                return post
+            if expected_title and expected_title in caption:
+                return post
+    except Exception as e:
+        print(f"Warning checking live feed: {e}", flush=True)
+    return None
 
 def run_comment_sweep():
     print("💬 Running live comment sweep for keywords 'SYNC' and 'link'...", flush=True)
@@ -149,8 +182,7 @@ def run_comment_sweep():
                         try:
                             make_meta_request(reply_url, data=r_data)
                             print(f"  ✓ Auto-replied to @{c_user} on comment {c_id}", flush=True)
-                        except Exception as e:
-                            # Already replied or permissions error
+                        except Exception:
                             pass
             except Exception:
                 pass
@@ -160,11 +192,8 @@ def run_comment_sweep():
 def publish_carousel_slide_with_retry(slide_idx, target_day, max_retries=3):
     """Uploads a single carousel slide container with multi-tier CDN fallback."""
     endpoints = [
-        # Primary: Raw GitHub (JPG)
         f"https://raw.githubusercontent.com/{REPO_OWNER}/{REPO_NAME}/{BRANCH}/carousels/Day{target_day}/slide_{slide_idx}.jpg",
-        # Failover 1: jsdelivr CDN (JPG)
         f"https://cdn.jsdelivr.net/gh/{REPO_OWNER}/{REPO_NAME}@{BRANCH}/carousels/Day{target_day}/slide_{slide_idx}.jpg",
-        # Failover 2: Raw GitHub (PNG)
         f"https://raw.githubusercontent.com/{REPO_OWNER}/{REPO_NAME}/{BRANCH}/carousels/Day{target_day}/slide_{slide_idx}.png",
     ]
 
@@ -203,6 +232,7 @@ def publish_with_retry(target_day, max_retries=3):
     day_data = db["days"][day_str]
     fmt = day_data.get("format", "REEL")
     caption = day_data.get("caption")
+    title = day_data.get('track_title') or day_data.get('headline') or 'Featured Post'
 
     now_ist_str = datetime.now(IST).strftime('%Y-%m-%d %H:%M:%S')
     print("==================================================", flush=True)
@@ -211,6 +241,21 @@ def publish_with_retry(target_day, max_retries=3):
     print(f"Account: @{handle} (ID: {account_id})", flush=True)
     print(f"Topic: {day_data.get('badge')}", flush=True)
     print("==================================================", flush=True)
+
+    # 1. PRE-FLIGHT LIVE FEED RECONCILIATION
+    # Check if target_day is ALREADY on the Instagram profile before doing anything!
+    existing_post = check_if_day_already_on_live_feed(target_day)
+    if existing_post:
+        post_id = existing_post.get("id")
+        permalink = existing_post.get("permalink") or f"https://www.instagram.com/{handle}/"
+        print("\n==================================================", flush=True)
+        print(f"✨ RECONCILED: Day {target_day} is ALREADY LIVE on Instagram!", flush=True)
+        print(f"Live Post ID: {post_id}", flush=True)
+        print(f"Live URL: {permalink}", flush=True)
+        print("==================================================\n", flush=True)
+        save_published_state(target_day, post_id, permalink, title)
+        run_comment_sweep()
+        return True
 
     container_url = f"https://graph.instagram.com/v19.0/{account_id}/media"
 
@@ -221,7 +266,6 @@ def publish_with_retry(target_day, max_retries=3):
             if fmt == "REEL":
                 video_filename = f"Day{target_day}_Master_Cinematic_Reel_IG.mp4"
                 
-                # Multi-tier CDN endpoints for video
                 video_endpoints = [
                     f"https://raw.githubusercontent.com/{REPO_OWNER}/{REPO_NAME}/{BRANCH}/reels/{video_filename}",
                     f"https://cdn.jsdelivr.net/gh/{REPO_OWNER}/{REPO_NAME}@{BRANCH}/reels/{video_filename}"
@@ -276,7 +320,7 @@ def publish_with_retry(target_day, max_retries=3):
                     continue
 
             elif fmt == "CAROUSEL":
-                slides_count = day_data.get("slides_count", 8)
+                slides_count = day_data.get("slides_count", 7)
                 print(f"Creating Carousel with {slides_count} slides...", flush=True)
                 slide_ids = []
                 for s_idx in range(1, slides_count + 1):
@@ -295,7 +339,7 @@ def publish_with_retry(target_day, max_retries=3):
                 container_id = p_res.get("id")
                 print(f"✅ CAROUSEL PARENT CONTAINER CREATED: {container_id}", flush=True)
 
-                # Poll status for Carousel Parent to prevent Media ID not available error
+                # Poll status for Carousel Parent
                 status_url = f"https://graph.instagram.com/v19.0/{container_id}?fields=status_code,status&access_token={token}"
                 print("Polling Meta carousel processing servers...", flush=True)
 
@@ -320,7 +364,11 @@ def publish_with_retry(target_day, max_retries=3):
                     time.sleep(10)
                     continue
 
-            # Publish Container to live feed
+                # Delay 15s for Meta CDN edge cache distribution of carousel children
+                print("Waiting 15s for Meta CDN edge distribution...", flush=True)
+                time.sleep(15)
+
+            # Publish Container to live feed with verification recovery
             print("Publishing container to live feed...", flush=True)
             pub_url = f"https://graph.instagram.com/v19.0/{account_id}/media_publish"
             pub_params = {
@@ -328,8 +376,24 @@ def publish_with_retry(target_day, max_retries=3):
                 "access_token": token
             }
             pub_data = urllib.parse.urlencode(pub_params).encode('utf-8')
-            pub_res = make_meta_request(pub_url, data=pub_data)
-            post_id = pub_res.get("id")
+            
+            post_id = None
+            try:
+                pub_res = make_meta_request(pub_url, data=pub_data)
+                post_id = pub_res.get("id")
+            except Exception as pe:
+                print(f"⚠️ Publish request error: {pe}", flush=True)
+                print("Checking if post was actually landed by Meta backend...", flush=True)
+                time.sleep(10)
+                reconciled = check_if_day_already_on_live_feed(target_day)
+                if reconciled:
+                    post_id = reconciled.get("id")
+                    print(f"✅ Verified: Post is LIVE on Instagram feed despite network/API response: {post_id}", flush=True)
+                else:
+                    if "2207051" in str(pe) or "action is blocked" in str(pe).lower():
+                        print("🛑 Meta rate/action limit (2207051) detected. Halting retries to protect account standing.", flush=True)
+                        return False
+                    raise pe
             
             print("\n==================================================", flush=True)
             print(f"🎉 SUCCESS: DAY {target_day} IS LIVE ON INSTAGRAM!", flush=True)
@@ -347,7 +411,6 @@ def publish_with_retry(target_day, max_retries=3):
             print(f"Live URL: {permalink}", flush=True)
             print("==================================================\n", flush=True)
 
-            title = day_data.get('track_title') or day_data.get('headline') or 'Featured Post'
             save_published_state(target_day, post_id, permalink, title)
             
             # Update log.md
@@ -362,6 +425,9 @@ def publish_with_retry(target_day, max_retries=3):
 
         except Exception as e:
             print(f"Attempt {attempt_retry} Exception: {e}", flush=True)
+            if "2207051" in str(e) or "action is blocked" in str(e).lower():
+                print("🛑 Meta action block detected. Stopping retry loop to protect account.", flush=True)
+                return False
             time.sleep(10)
 
     print(f"❌ Failed to publish Day {target_day} after {max_retries} retries.", flush=True)
