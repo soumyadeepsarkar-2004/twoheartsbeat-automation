@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Two Hearts Beat - Character Skit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600;0,9..40,700;1,9..40,400&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    width: 1080px;
+    height: 1920px;
+    background: #080B14;
+    color: #FFFFFF;
+    font-family: 'DM Sans', sans-serif;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* Ambient cinematic lighting */
+  .bg-ambient {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 20% 15%, rgba(255, 77, 106, 0.18), transparent 50%),
+                radial-gradient(circle at 80% 85%, rgba(99, 102, 241, 0.22), transparent 55%),
+                radial-gradient(circle at 50% 50%, rgba(15, 23, 42, 0.8), transparent 70%);
+  }
+
+  .bg-grid {
+    position: absolute;
+    inset: 0;
+    background-size: 60px 60px;
+    background-image: 
+      linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  }
+
+  /* Top Header */
+  .header-bar {
+    position: absolute;
+    top: 70px;
+    left: 60px;
+    right: 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 20;
+  }
+  .brand-pill {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 24px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(16px);
+  }
+  .brand-heart {
+    color: #FF4D6A;
+    font-size: 20px;
+    animation: heartBeat 1.4s ease-in-out infinite;
+  }
+  @keyframes heartBeat {
+    0%, 100% { transform: scale(1); }
+    15% { transform: scale(1.25); }
+    30% { transform: scale(1); }
+    45% { transform: scale(1.18); }
+  }
+  .brand-title {
+    font-size: 19px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: #F8FAFC;
+  }
+  .live-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border-radius: 999px;
+    background: rgba(16, 185, 129, 0.12);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    font-family: 'DM Mono', monospace;
+    font-size: 15px;
+    font-weight: 600;
+    color: #34D399;
+  }
+  .live-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #10B981;
+    box-shadow: 0 0 10px #10B981;
+  }
+
+  /* Main Hook & Headline */
+  .hook-container {
+    position: absolute;
+    top: 170px;
+    left: 60px;
+    right: 60px;
+    text-align: center;
+    z-index: 20;
+  }
+  .category-tag {
+    display: inline-block;
+    padding: 6px 18px;
+    border-radius: 999px;
+    background: rgba(255, 77, 106, 0.12);
+    border: 1px solid rgba(255, 77, 106, 0.3);
+    color: #FF6B8B;
+    font-family: 'DM Mono', monospace;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .headline {
+    font-size: 50px;
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: #FFFFFF;
+    margin-bottom: 12px;
+  }
+  .headline em {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    color: #FF4D6A;
+  }
+  .sub-headline {
+    font-size: 22px;
+    color: #94A3B8;
+    font-weight: 400;
+    max-width: 860px;
+    margin: 0 auto;
+  }
+
+  /* Split Screen Character Arena */
+  .characters-arena {
+    position: absolute;
+    top: 420px;
+    left: 50px;
+    right: 50px;
+    height: 980px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    z-index: 10;
+  }
+
+  /* Character Cards */
+  .char-card {
+    flex: 1;
+    border-radius: 28px;
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(20px);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    padding: 30px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  }
+
+  /* Top Card: Soumya (Delhi) */
+  .card-top {
+    border-top: 2px solid rgba(255, 77, 106, 0.4);
+  }
+  /* Bottom Card: Maya (Bangalore) */
+  .card-bottom {
+    border-bottom: 2px solid rgba(99, 102, 241, 0.4);
+  }
+
+  .char-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    z-index: 2;
+  }
+  .city-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'DM Mono', monospace;
+    font-size: 16px;
+    font-weight: 600;
+    color: #E2E8F0;
+    background: rgba(255, 255, 255, 0.08);
+    padding: 6px 16px;
+    border-radius: 12px;
+    align-self: flex-start;
+  }
+  .dialogue-bubble {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 20px;
+    padding: 18px 24px;
+    font-size: 21px;
+    font-weight: 500;
+    color: #F8FAFC;
+    line-height: 1.35;
+    max-width: 520px;
+    margin: 15px 0;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+    animation: bubbleFloat 3s ease-in-out infinite alternate;
+  }
+  @keyframes bubbleFloat {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-5px); }
+  }
+
+  .music-tag {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 16px;
+    color: #94A3B8;
+  }
+  .music-icon {
+    color: #FF4D6A;
+  }
+
+  /* Character Image Cutout */
+  .char-visual {
+    width: 380px;
+    height: 100%;
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+  }
+  .char-img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 15px 30px rgba(0, 0, 0, 0.6));
+    animation: breathe 4s ease-in-out infinite;
+  }
+  @keyframes breathe {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.02) translateY(-4px); }
+  }
+
+  /* Center Audio Sync Bridge */
+  .sync-bridge {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 30;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .mascot-bubble {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #FF4D6A 20%, #E11D48 90%);
+    box-shadow: 0 0 35px rgba(255, 77, 106, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid #FFFFFF;
+    animation: mascotBob 2s ease-in-out infinite;
+  }
+  @keyframes mascotBob {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-8px) scale(1.08); }
+  }
+  .mascot-icon {
+    font-size: 44px;
+  }
+  .sync-status-pill {
+    margin-top: 10px;
+    padding: 8px 20px;
+    border-radius: 999px;
+    background: #0F172A;
+    border: 1px solid rgba(255, 77, 106, 0.5);
+    font-family: 'DM Mono', monospace;
+    font-size: 15px;
+    font-weight: 700;
+    color: #FF4D6A;
+    letter-spacing: 0.05em;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    white-space: nowrap;
+  }
+
+  /* Bottom Product Conversion Bar */
+  .conversion-box {
+    position: absolute;
+    bottom: 80px;
+    left: 60px;
+    right: 60px;
+    background: linear-gradient(135deg, rgba(255, 77, 106, 0.15), rgba(99, 102, 241, 0.15));
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 28px;
+    padding: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    backdrop-filter: blur(25px);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    z-index: 20;
+  }
+  .cta-text-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .cta-main {
+    font-size: 28px;
+    font-weight: 700;
+    color: #FFFFFF;
+  }
+  .cta-main em {
+    font-style: normal;
+    color: #FF4D6A;
+  }
+  .cta-sub {
+    font-size: 18px;
+    color: #94A3B8;
+  }
+  .url-pill {
+    padding: 16px 28px;
+    background: #FFFFFF;
+    color: #0F172A;
+    border-radius: 20px;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    box-shadow: 0 10px 25px rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* Audio Waveform Canvas Overlay */
+  .wave-bar-container {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    height: 30px;
+    margin-top: 10px;
+  }
+  .wave-bar {
+    width: 4px;
+    background: #FF4D6A;
+    border-radius: 2px;
+    animation: waveBounce 1.2s ease-in-out infinite alternate;
+  }
+  .wave-bar:nth-child(2) { animation-delay: 0.2s; height: 18px; }
+  .wave-bar:nth-child(3) { animation-delay: 0.4s; height: 26px; }
+  .wave-bar:nth-child(4) { animation-delay: 0.1s; height: 14px; }
+  .wave-bar:nth-child(5) { animation-delay: 0.5s; height: 22px; }
+  .wave-bar:nth-child(6) { animation-delay: 0.3s; height: 16px; }
+  @keyframes waveBounce {
+    0% { transform: scaleY(0.4); }
+    100% { transform: scaleY(1.4); }
+  }
+</style>
+</head>
+<body>
+  <div class="bg-ambient"></div>
+  <div class="bg-grid"></div>
+
+  <!-- Top Header -->
+  <div class="header-bar">
+    <div class="brand-pill">
+      <span class="brand-heart">🫀</span>
+      <span class="brand-title">TWO HEARTS BEAT</span>
+    </div>
+    <div class="live-badge">
+      <span class="live-dot"></span>
+      <span>0.00 MS SYNC</span>
+    </div>
+  </div>
+
+  <!-- Hook & Headline -->
+  <div class="hook-container">
+    <div class="category-tag">{{BADGE}}</div>
+    <h1 class="headline">{{HEADLINE}}</h1>
+    <p class="sub-headline">{{SUB}}</p>
+  </div>
+
+  <!-- Characters Arena -->
+  <div class="characters-arena">
+    <!-- Top: Soumya (Delhi) -->
+    <div class="char-card card-top">
+      <div class="char-info">
+        <div class="city-badge">
+          <span>📍</span>
+          <span>{{CITY1}}</span>
+          <span style="color: #64748B;">· 2:14 AM</span>
+        </div>
+        <div class="dialogue-bubble">
+          {{DIALOGUE1}}
+        </div>
+        <div class="music-tag">
+          <span class="music-icon">🎧</span>
+          <span>Playing: <strong>{{TRACK_TITLE}}</strong> ({{TRACK_ARTIST}})</span>
+        </div>
+      </div>
+      <div class="char-visual">
+        <img class="char-img" src="{{CHAR_IMG_1}}" alt="Soumya">
+      </div>
+    </div>
+
+    <!-- Center Mascot Bridge -->
+    <div class="sync-bridge">
+      <div class="mascot-bubble">
+        <span class="mascot-icon">🫀</span>
+      </div>
+      <div class="sync-status-pill">
+        ⚡ {{SYNC_STATUS}}
+      </div>
+    </div>
+
+    <!-- Bottom: Maya (Bangalore) -->
+    <div class="char-card card-bottom">
+      <div class="char-info">
+        <div class="city-badge">
+          <span>📍</span>
+          <span>{{CITY2}}</span>
+          <span style="color: #64748B;">· 2:14 AM</span>
+        </div>
+        <div class="dialogue-bubble">
+          {{DIALOGUE2}}
+        </div>
+        <div class="music-tag">
+          <span class="music-icon">🎵</span>
+          <span>Synced over <strong>{{DISTANCE}}</strong></span>
+          <div class="wave-bar-container">
+            <div class="wave-bar" style="height: 12px;"></div>
+            <div class="wave-bar" style="height: 20px;"></div>
+            <div class="wave-bar" style="height: 15px;"></div>
+            <div class="wave-bar" style="height: 24px;"></div>
+            <div class="wave-bar" style="height: 18px;"></div>
+          </div>
+        </div>
+      </div>
+      <div class="char-visual">
+        <img class="char-img" src="{{CHAR_IMG_2}}" alt="Maya">
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom CTA Conversion Bar -->
+  <div class="conversion-box">
+    <div class="cta-text-group">
+      <div class="cta-main">Comment <em>"SYNC"</em> for room link 👇</div>
+      <div class="cta-sub">100% Free · No App Download · Zero Audio Lag</div>
+    </div>
+    <div class="url-pill">
+      <span>twoheartsbeat.live</span>
+      <span>→</span>
+    </div>
+  </div>
+</body>
+</html>
