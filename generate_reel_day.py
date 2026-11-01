@@ -114,6 +114,15 @@ def render_day_reel(day_num):
     html = html.replace("{{CHAR_IMG_1}}", char1_url)
     html = html.replace("{{CHAR_IMG_2}}", char2_url)
 
+    # Explainer template replacements
+    explainer_speech = data.get("explainer_speech", "Commercial apps charge monthly fees and still drift by seconds. So I coded Two Hearts Beat — exact same millisecond sync on both phones. 100% free, zero installs.")
+    char_main_name = data.get("char_main", "soumya_explaining.png")
+    char_main_path = os.path.join(motion_assets, "characters", char_main_name)
+    char_main_url = f"file:///{char_main_path.replace(os.sep, '/')}"
+
+    html = html.replace("{{EXPLAINER_SPEECH}}", explainer_speech)
+    html = html.replace("{{CHAR_IMG_MAIN}}", char_main_url)
+
     custom_html_path = os.path.join(motion_assets, f"reel_day_{day_num}.html")
     with open(custom_html_path, "w", encoding="utf-8") as f:
         f.write(html)
