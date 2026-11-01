@@ -18,10 +18,11 @@
     16,
     17,
     18,
-    19
+    19,
+    20
   ],
-  "last_published": 19,
-  "last_published_at": "2026-10-31T23:48:43.907415+05:30",
+  "last_published": 20,
+  "last_published_at": "2026-11-02T00:16:47.806391+05:30",
   "history": [
     {
       "day": 1,
@@ -150,6 +151,13 @@
       "permalink": "https://www.instagram.com/reel/DfKUmZRE1jh/",
       "title": "Alag Aasmaan",
       "published_at": "2026-10-31T23:48:43.907415+05:30"
+    },
+    {
+      "day": 20,
+      "post_id": "18089132813299372",
+      "permalink": "https://www.instagram.com/reel/DfM5Zhujm6f/",
+      "title": "Kasoor",
+      "published_at": "2026-11-02T00:16:47.806391+05:30"
     }
   ]
 }
