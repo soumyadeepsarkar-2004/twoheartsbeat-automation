@@ -19,10 +19,11 @@
     17,
     18,
     19,
-    20
+    20,
+    21
   ],
-  "last_published": 20,
-  "last_published_at": "2026-11-02T00:16:47.806391+05:30",
+  "last_published": 21,
+  "last_published_at": "2026-11-03T04:08:48.362282+05:30",
   "history": [
     {
       "day": 1,
@@ -158,6 +159,13 @@
       "permalink": "https://www.instagram.com/reel/DfM5Zhujm6f/",
       "title": "Kasoor",
       "published_at": "2026-11-02T00:16:47.806391+05:30"
+    },
+    {
+      "day": 21,
+      "post_id": "18114176303190346",
+      "permalink": "https://www.instagram.com/reel/DfQZdsFjy9n/",
+      "title": "Husn",
+      "published_at": "2026-11-03T04:08:48.362282+05:30"
     }
   ]
 }
