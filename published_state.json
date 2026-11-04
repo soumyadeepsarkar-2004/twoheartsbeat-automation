@@ -21,10 +21,11 @@
     19,
     20,
     21,
-    22
+    22,
+    23
   ],
-  "last_published": 22,
-  "last_published_at": "2026-11-04T01:57:21.054182+05:30",
+  "last_published": 23,
+  "last_published_at": "2026-11-05T02:12:31.710652+05:30",
   "history": [
     {
       "day": 1,
@@ -174,6 +175,13 @@
       "permalink": "https://www.instagram.com/reel/De4pXM7ESEZ/",
       "title": "Baarishein",
       "published_at": "2026-11-04T01:57:21.054182+05:30"
+    },
+    {
+      "day": 23,
+      "post_id": "18138326974648043",
+      "permalink": "https://www.instagram.com/reel/DfVVvfuifqB/",
+      "title": "Iraaday",
+      "published_at": "2026-11-05T02:12:31.710652+05:30"
     }
   ]
 }
