@@ -22,10 +22,11 @@
     20,
     21,
     22,
-    23
+    23,
+    24
   ],
-  "last_published": 23,
-  "last_published_at": "2026-11-05T02:12:31.710652+05:30",
+  "last_published": 24,
+  "last_published_at": "2026-11-06T02:27:40.076078+05:30",
   "history": [
     {
       "day": 1,
@@ -182,6 +183,13 @@
       "permalink": "https://www.instagram.com/reel/DfVVvfuifqB/",
       "title": "Iraaday",
       "published_at": "2026-11-05T02:12:31.710652+05:30"
+    },
+    {
+      "day": 24,
+      "post_id": "18180464074446032",
+      "permalink": "https://www.instagram.com/reel/DfX8Q5VESpM/",
+      "title": "Pehle Bhi Main",
+      "published_at": "2026-11-06T02:27:40.076078+05:30"
     }
   ]
 }
