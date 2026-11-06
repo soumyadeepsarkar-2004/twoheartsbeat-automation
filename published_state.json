@@ -23,10 +23,11 @@
     21,
     22,
     23,
-    24
+    24,
+    25
   ],
-  "last_published": 24,
-  "last_published_at": "2026-11-06T02:27:40.076078+05:30",
+  "last_published": 25,
+  "last_published_at": "2026-11-07T01:47:27.336227+05:30",
   "history": [
     {
       "day": 1,
@@ -190,6 +191,13 @@
       "permalink": "https://www.instagram.com/reel/DfX8Q5VESpM/",
       "title": "Pehle Bhi Main",
       "published_at": "2026-11-06T02:27:40.076078+05:30"
+    },
+    {
+      "day": 25,
+      "post_id": "18117428945104222",
+      "permalink": "https://www.instagram.com/p/Dfacc7yG3tJ/",
+      "title": "Troubleshooting LDR Fatigue: 5 Micro-Habits That Reconnect You",
+      "published_at": "2026-11-07T01:47:27.336227+05:30"
     }
   ]
 }
