@@ -28,10 +28,11 @@
     26,
     27,
     28,
-    29
+    29,
+    30
   ],
-  "last_published": 29,
-  "last_published_at": "2026-11-11T02:15:01.177893+05:30",
+  "last_published": 30,
+  "last_published_at": "2026-11-12T02:36:48.820554+05:30",
   "history": [
     {
       "day": 1,
@@ -230,6 +231,13 @@
       "permalink": "https://www.instagram.com/reel/Dfkyw-SClQq/",
       "title": "Kho Gaye Hum Kahan",
       "published_at": "2026-11-11T02:15:01.177893+05:30"
+    },
+    {
+      "day": 30,
+      "post_id": "18443357932178756",
+      "permalink": "https://www.instagram.com/reel/DfnaFppnJIt/",
+      "title": "Iktara",
+      "published_at": "2026-11-12T02:36:48.820554+05:30"
     }
   ]
 }
