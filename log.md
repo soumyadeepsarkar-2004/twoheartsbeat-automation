@@ -70,3 +70,4 @@
 | **Day 28 (REEL)** | `18113398592139426` | Pee Loon | 🎉 **LIVE ON FEED** | [View Post](https://www.instagram.com/reel/DfifoPRAqJj/) |
 | **Day 29 (REEL)** | `18223327036356391` | Kho Gaye Hum Kahan | 🎉 **LIVE ON FEED** | [View Post](https://www.instagram.com/reel/Dfkyw-SClQq/) |
 | **Day 30 (REEL)** | `18443357932178756` | Iktara | 🎉 **LIVE ON FEED** | [View Post](https://www.instagram.com/reel/DfnaFppnJIt/) |
+| **Day 31 (REEL)** | `17985913805900453` | Faasle | 🎉 **LIVE ON FEED** | [View Post](https://www.instagram.com/reel/DfqAkBLnGuC/) |

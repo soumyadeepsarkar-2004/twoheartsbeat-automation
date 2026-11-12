@@ -29,10 +29,11 @@
     27,
     28,
     29,
-    30
+    30,
+    31
   ],
-  "last_published": 30,
-  "last_published_at": "2026-11-12T02:36:48.820554+05:30",
+  "last_published": 31,
+  "last_published_at": "2026-11-13T02:51:32.165721+05:30",
   "history": [
     {
       "day": 1,
@@ -238,6 +239,13 @@
       "permalink": "https://www.instagram.com/reel/DfnaFppnJIt/",
       "title": "Iktara",
       "published_at": "2026-11-12T02:36:48.820554+05:30"
+    },
+    {
+      "day": 31,
+      "post_id": "17985913805900453",
+      "permalink": "https://www.instagram.com/reel/DfqAkBLnGuC/",
+      "title": "Faasle",
+      "published_at": "2026-11-13T02:51:32.165721+05:30"
     }
   ]
 }
