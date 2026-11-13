@@ -30,10 +30,11 @@
     28,
     29,
     30,
-    31
+    31,
+    32
   ],
-  "last_published": 31,
-  "last_published_at": "2026-11-13T02:51:32.165721+05:30",
+  "last_published": 32,
+  "last_published_at": "2026-11-14T02:19:44.536405+05:30",
   "history": [
     {
       "day": 1,
@@ -246,6 +247,13 @@
       "permalink": "https://www.instagram.com/reel/DfqAkBLnGuC/",
       "title": "Faasle",
       "published_at": "2026-11-13T02:51:32.165721+05:30"
+    },
+    {
+      "day": 32,
+      "post_id": "18025620404747184",
+      "permalink": "https://www.instagram.com/reel/DfshuQLird-/",
+      "title": "Baarishein",
+      "published_at": "2026-11-14T02:19:44.536405+05:30"
     }
   ]
 }
