@@ -73,3 +73,4 @@
 | **Day 31 (REEL)** | `17985913805900453` | Faasle | 🎉 **LIVE ON FEED** | [View Post](https://www.instagram.com/reel/DfqAkBLnGuC/) |
 | **Day 32 (REEL)** | `18025620404747184` | Baarishein | 🎉 **LIVE ON FEED** | [View Post](https://www.instagram.com/reel/DfshuQLird-/) |
 | **Day 33 (REEL)** | `18116902760594736` | Tum Se Hi | 🎉 **LIVE ON FEED** | [View Post](https://www.instagram.com/reel/Dfu51UCGRoH/) |
+| **Day 34 (REEL)** | `18101745350441491` | Kasoor | 🎉 **LIVE ON FEED** | [View Post](https://www.instagram.com/reel/DfxjLlviWyh/) |

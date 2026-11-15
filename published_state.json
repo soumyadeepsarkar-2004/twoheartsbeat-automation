@@ -32,10 +32,11 @@
     30,
     31,
     32,
-    33
+    33,
+    34
   ],
-  "last_published": 33,
-  "last_published_at": "2026-11-15T00:28:55.890689+05:30",
+  "last_published": 34,
+  "last_published_at": "2026-11-16T01:08:38.674277+05:30",
   "history": [
     {
       "day": 1,
@@ -262,6 +263,13 @@
       "permalink": "https://www.instagram.com/reel/Dfu51UCGRoH/",
       "title": "Tum Se Hi",
       "published_at": "2026-11-15T00:28:55.890689+05:30"
+    },
+    {
+      "day": 34,
+      "post_id": "18101745350441491",
+      "permalink": "https://www.instagram.com/reel/DfxjLlviWyh/",
+      "title": "Kasoor",
+      "published_at": "2026-11-16T01:08:38.674277+05:30"
     }
   ]
 }
